@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-// import { Helmet } from 'react-helmet-async'; // Removed
+// Removed commented import { Helmet } from 'react-helmet-async';
 // import { useLocation } from 'react-router-dom'; // No longer needed
 import clsx from 'clsx';
 import Header from '../navigation/Header';
@@ -8,12 +8,13 @@ import Footer from '../navigation/Footer';
 import UnderwaterEnvironment from '../effects/UnderwaterEnvironment';
 import OverwaterEnvironment from '../environments/OverwaterEnvironment';
 import { useTheme } from '../../context/ThemeContext';
+import ScrollToTop from '../utils/ScrollToTop';
 
 /**
  * Layout Component
  * 
  * Provides consistent layout structure for all pages with:
- * - SEO metadata through react-helmet-async
+ * // Removed comment about SEO metadata through react-helmet-async
  * - Underwater background effect
  * - Header with navigation
  * - Main content area
@@ -45,6 +46,8 @@ export const Layout: React.FC<LayoutProps> = ({
   
   return (
     <div className="site-container">
+      <ScrollToTop />
+      
       {/* Metadata tags rendered directly */}
       <title>
         {pageTitle ? `${pageTitle} | BLUE MARLIN OS` : 'BLUE MARLIN OS | Deep Sea Engineering'}

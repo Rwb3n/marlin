@@ -1,7 +1,6 @@
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-// import { HelmetProvider } from 'react-helmet-async';
 import ThemeProvider from './context/ThemeContext';
 import router from './router';
 import './index.css';
@@ -14,9 +13,7 @@ if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <ThemeProvider>
-        {/* <HelmetProvider> */}
           <RouterProvider router={router} />
-        {/* </HelmetProvider> */}
       </ThemeProvider>
     </StrictMode>,
   );
