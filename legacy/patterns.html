@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" class="phase-apex">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration Patterns | BLUE MARLIN OS</title>
+  <!-- Link existing stylesheet for basic readability and theme context -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Minimal styles for patterns page readability - Reduced wrappers */
+    body {
+      padding: 1rem;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .content-container { /* Main wrapper for the whole page content */
+      max-width: 900px;
+      margin: 1rem auto;
+      padding: 1.5rem;
+      background-color: var(--apex-container-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    html.phase-origin .content-container {
+      background-color: var(--origin-container-bg);
+      border: 1px solid rgba(14, 14, 14, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    h1, h2 {
+      font-family: 'Special Gothic Expanded One', sans-serif;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.5rem;
+    }
+    html.phase-origin h1, html.phase-origin h2 {
+       border-bottom-color: rgba(0, 0, 0, 0.1);
+     }
+    h2 { margin-top: 2.5rem; }
+    h3 { /* Used for component titles without wrappers */
+        font-family: 'Special Gothic Expanded One', sans-serif;
+        font-size: 1.3em;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1rem;
+    }
+    html.phase-origin h3 { border-top-color: rgba(0,0,0,0.1); }
+
+    /* Minimal wrapper for simple/isolated components */
+    .pattern-item {
+      margin-bottom: 1.5rem; 
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separator */
+      /* Removed background, left-border */
+    }
+     html.phase-origin .pattern-item { border-top-color: rgba(0,0,0,0.1); }
+
+    .pattern-item strong {
+      display: block; 
+      margin-bottom: 0.5rem; 
+      font-size: 1.2em; 
+      font-family: 'Special Gothic Expanded One', sans-serif;
+    }
+    .pattern-item code, h3 + p > code { /* Style code after h3 description too */
+        font-size: 0.85em; background-color: rgba(0,0,0,0.2); 
+        padding: 0.2em 0.4em; border-radius: 3px; 
+        margin-right: 0.5em; display: inline-block; 
+    }
+    html.phase-origin .pattern-item code, html.phase-origin h3 + p > code {
+         background-color: rgba(0,0,0,0.1); 
+    }
+    .pattern-item a, h3 + p > a { /* Style links after h3 description too */
+        color: var(--apex-accent); text-decoration: underline; 
+        font-size: 0.9em; margin-left: 1em; 
+    }
+    html.phase-origin .pattern-item a, html.phase-origin h3 + p > a {
+         color: var(--origin-accent); 
+    }
+    p { margin-bottom: 1rem; opacity: 0.9;}
+    .page-purpose { opacity: 0.8; font-style: italic; margin-bottom: 2rem; }
+    .component-note { font-size: 0.85em; opacity: 0.7; display: block; margin: 0.5rem 0; }
+    
+    /* Removed .pattern-demo styles - demos are now inline or direct children */
+    
+    /* Spacing adjustments */
+    .direct-showcase {
+        margin-top: 1rem;
+        margin-bottom: 2rem; /* Add space after direct showcases */
+    }
+    hr {
+        border: none; 
+        border-top: 1px dashed rgba(255, 255, 255, 0.2);
+        margin: 2rem 0;
+    }
+     html.phase-origin hr { border-top-color: rgba(0,0,0,0.2); }
+
+  </style>
+</head>
+<body>
+
+  <div class="content-container">
+    <h1>BLUE MARLIN OS - Migration Component Patterns</h1>
+    <p class="page-purpose">
+      This page visually showcases the core UI components and patterns required for each main page type 
+      (Landing, Collection, Entry) to guide the Tailwind CSS / 11ty migration. 
+      It serves as a visual checklist derived from the project structure and the visual component inventory.
+      <br>For detailed visual examples and styles, see the <a href="style-guide.html" style="text-decoration: underline;">UI Style Guide</a>.
+    </p>
+
+    <!-- =================================================================== -->
+    <h2>Global Patterns / Core Systems</h2>
+    <!-- =================================================================== -->
+
+    <div class="pattern-item">
+      <strong>Base Styles & Typography</strong>
+      <code>body</code> <code>h1</code>-<code>h6</code> <code>p</code> <code>a</code> <code>code</code>
+      <span class="component-note">Foundation styles applied globally. Check Style Guide for details.</span>
+      <a href="style-guide.html#typography">Style Guide: Typography</a>
+    </div>
+    
+    <div class="pattern-item">
+      <strong>Dual Theme System</strong>
+      CSS Variables (<code>:root</code>), <code>html.phase-origin</code> toggling
+      <span class="component-note">Core mechanism for light/dark modes. Variables need mapping to Tailwind theme config.</span>
+      <a href="style-guide.html#colors">Style Guide: Colors & Themes</a>
+    </div>
+    
+    <div class="pattern-item">
+      <strong>Theme Toggle Control</strong>
+      <code>.theme-toggle</code> <code>.theme-toggle-knob</code>
+      <span class="component-note">Interactive element, likely needs JS interaction preserved/re-implemented.</span>
+      <a href="style-guide.html#colors">Style Guide: Colors & Themes</a>
+       <!-- Demo within minimal wrapper -->
+      <button id="themeToggleDemo" class="theme-toggle" aria-label="Switch theme mode" style="margin-top: 0.5rem;">
+        <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+      </button>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Underwater Environment Effects</strong>
+        <code>.underwater-environment</code> <code>.light-shaft</code> <code>.particle</code> <code>.water-ripple</code>
+        <span class="component-note">Background effects. Complex; requires careful migration (Tailwind plugin or custom CSS). JS interaction needed.</span>
+        <a href="style-guide.html#effects">Style Guide: Visual Effects</a>
+         <!-- No direct demo here - page background serves as implicit demo -->
+    </div>
+
+    <hr>
+    
+    <!-- Header Showcase (No Wrapper) -->
+    <h3>Header / Navigation</h3>
+    <p>
+        <code>.header</code> <code>.header-top</code> <code>.logo</code> <code>.nav</code> (Desktop) <code>.mobile-nav</code> (Mobile)
+        <a href="style-guide.html#navigation">Style Guide: Navigation</a>
+    </p>
+    <span class="component-note">Includes logo, status, theme toggle, and responsive navigation. Assumed present on main pages.</span>
+    <div class="direct-showcase">
+        <header class="header" style="position: static; margin-bottom: 1rem;">
+            <div class="header-top">
+                <a href="#" class="logo"><span>BLUE MARLIN</span> OS</a>
+                <div class="header-controls">
+                    <div class="location-time" style="display: flex;">
+                        <div class="status-indicator"></div>
+                        <span>DEPTH: 123M | 10:00:00</span>
+                    </div>
+                    <button class="theme-toggle" aria-label="Switch theme mode">
+                        <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+                    </button>
+                </div>
+            </div>
+            <nav class="nav" style="display: flex;">
+                <ul class="nav-links">
+                    <li><a href="#">LINK 1</a></li>
+                    <li><a href="#" class="active">LINK 2</a></li>
+                    <li><a href="#">LINK 3</a></li>
+                </ul>
+            </nav>
+        </header>
+        <nav class="mobile-nav" style="position: static; width: 100%;">
+            <a href="#">LINK 1</a>
+            <a href="#" class="active">LINK 2</a>
+            <a href="#">LINK 3</a>
+        </nav>
+    </div>
+
+    <div class="pattern-item">
+        <strong>Content Container</strong>
+        <code>.content-container</code>
+        <span class="component-note">Basic wrapper with glassmorphism effect for main content areas.</span>
+         <a href="style-guide.html#cards">Style Guide: Cards & Containers</a>
+         <!-- Demo within minimal wrapper -->
+        <div class="content-container" style="margin: 0.5rem 0 0 0; padding: 1rem;">
+            <p>This is content within a standard container.</p>
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <h2>Landing Page Patterns</h2>
+    <!-- =================================================================== -->
+    
+    <!-- Hero Showcase (No Wrapper) -->
+    <h3>Hero Section</h3>
+    <p>
+        <code>.hero</code>
+        <a href="style-guide.html#cards">Style Guide: Cards & Containers (implicitly shown)</a>
+    </p>
+    <span class="component-note">Large title and introductory text.</span>
+    <div class="direct-showcase">
+        <div class="hero" style="padding: 1rem 0; border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+            <h1><span>BLUE MARLIN OS</span> Landing Page Hero</h1>
+            <p>This is the main introductory text for the landing page.</p>
+        </div>
+    </div>
+    
+    <!-- Project Grid Showcase (No Wrapper) -->
+    <h3>Project Grid</h3>
+    <p>
+        <code>.project-grid</code> <code>.project-image</code>
+        <a href="style-guide.html#cards">Style Guide: Cards & Containers</a>
+    </p>
+    <span class="component-note">Grid display for featured projects.</span>
+    <div class="direct-showcase">
+        <div class="project-grid" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); max-width: 100%;">
+            <div class="project-image">
+                <div>Project Preview 1</div>
+                <div class="project-status">STATUS: ACTIVE</div>
+                <div class="project-id">PROJECT ID: 00-542-A</div>
+            </div>
+             <div class="project-image">
+                <div>Project Preview 2</div>
+                <div class="project-status">STATUS: CONCEPT</div>
+                <div class="project-id">PROJECT ID: 01-113-C</div>
+            </div>
+            <!-- Repeat .project-image for more grid items -->
+        </div>
+    </div>
+    
+    <!-- Journal Grid Showcase (No Wrapper) -->
+    <h3>Journal Grid (Featured)</h3>
+    <p>
+        <code>.journal-grid</code> <code>.journal-card</code>
+        <a href="style-guide.html#cards">Style Guide: Cards & Containers</a>
+        <a href="style-guide.html#layout">Style Guide: Layout Systems</a>
+    </p>
+    <span class="component-note">Grid display for recent journal entries.</span>
+    <div class="direct-showcase">
+        <div class="journal-grid" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); max-width: 100%;">
+            <div class="journal-card">
+                <div class="journal-date">04.12.2025</div>
+                <h3>Featured Entry Title</h3>
+                <p>Excerpt of the featured journal entry...</p>
+                <a href="#" class="read-more">READ MORE <svg width="1em" height="1em" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></a>
+            </div>
+             <div class="journal-card">
+                <div class="journal-date">04.10.2025</div>
+                <h3>Another Entry</h3>
+                <p>More details about something interesting found in the depths.</p>
+                <a href="#" class="read-more">READ MORE <svg width="1em" height="1em" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></a>
+            </div>
+            <!-- Repeat .journal-card for more grid items -->
+        </div>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Call to Action Link</strong>
+        <code>.read-more</code>
+        <span class="component-note">Likely used to link to collection pages.</span>
+        <a href="style-guide.html#buttons">Style Guide: Buttons & CTAs</a>
+        <!-- Demo within minimal wrapper -->
+        <div style="margin-top: 0.5rem;">
+            <a href="#" class="read-more">
+                VIEW ALL PROJECTS
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+     </div>
+
+    <!-- =================================================================== -->
+    <h2>Collection Page Patterns (Projects/Journal List)</h2>
+    <!-- =================================================================== -->
+    
+    <div class="pattern-item">
+        <strong>Page Title</strong>
+        Standard <code>h1</code> or <code>h2</code>
+        <span class="component-note">Basic page heading.</span>
+        <a href="style-guide.html#typography">Style Guide: Typography</a>
+        <!-- Demo within minimal wrapper -->
+        <h2 style="margin-top: 0.5rem; border: none;">Project Archive</h2>
+    </div>
+    
+    <!-- Collection Grid Showcase (No Wrapper) -->
+    <h3>Content Grid & Card Component</h3>
+    <p>
+        <code>.journal-grid</code> <code>.journal-card</code>
+        <a href="style-guide.html#layout">Style Guide: Layout Systems</a>
+        <a href="style-guide.html#cards">Style Guide: Cards & Containers</a>
+    </p>
+    <span class="component-note">Layout and repeating card for displaying collection items (using Journal Card as example).</span>
+     <div class="direct-showcase">
+        <div class="journal-grid" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); max-width: 100%;">
+            <div class="journal-card">
+                <div class="journal-date">04.12.2025</div>
+                <h3>Collection Item 1</h3>
+                <p>Description or excerpt of the first item.</p>
+                <a href="#" class="read-more">VIEW <svg width="1em" height="1em" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></a>
+            </div>
+            <div class="journal-card">
+                <div class="journal-date">04.10.2025</div>
+                <h3>Collection Item 2</h3>
+                <p>Description or excerpt of the second item.</p>
+                <a href="#" class="read-more">VIEW <svg width="1em" height="1em" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></a>
+            </div>
+             <div class="journal-card">
+                <div class="journal-date">04.08.2025</div>
+                <h3>Collection Item 3</h3>
+                <p>Description or excerpt of the third item.</p>
+                <a href="#" class="read-more">VIEW <svg width="1em" height="1em" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></a>
+            </div>
+            <!-- Repeat .journal-card -->
+        </div>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Pagination (Potential Requirement)</strong>
+        (No existing component identified)
+        <span class="component-note">May be needed if collections become large. Requires design/implementation.</span>
+        <!-- No demo available -->
+    </div>
+
+    <!-- =================================================================== -->
+    <h2>Entry Page Patterns (Project/Blog Post)</h2>
+    <!-- =================================================================== -->
+    
+    <div class="pattern-item">
+        <strong>Post Header / Metadata</strong>
+        <code>.blog-meta</code> <code>.blog-date</code> <code>.blog-tag</code> <code>.blog-title</code>
+        <span class="component-note">Displays title, date, tags.</span>
+        <a href="style-guide.html#blog">Style Guide: Blog Components</a>
+        <!-- Demo within minimal wrapper -->
+        <div style="margin-top: 0.5rem;">
+            <div class="blog-meta">
+                <span class="blog-date">04.12.2025</span>
+                <span class="blog-tag">RENDERING</span>
+                <span class="blog-tag">OPTIMIZATION</span>
+            </div>
+            <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem; border: none;">Example Post Title</h1>
+        </div>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Main Content Styling</strong>
+        <code>p</code> <code>ul</code> <code>pre > code</code> <code>.blog-image</code>
+        <span class="component-note">Styling for formatted text, lists, images, code within the post body.</span>
+        <a href="style-guide.html#typography">Style Guide: Typography</a>
+        <a href="style-guide.html#blog">Style Guide: Blog Components</a>
+        <!-- Demo within minimal wrapper -->
+        <div style="margin-top: 0.5rem;">
+            <p>This is a paragraph of text within the main content area.</p>
+            <ul style="padding-left: 1.5rem;"><li>List item 1</li><li>List item 2</li></ul>
+            <pre><code>// This is a code block example
+function greet() {
+  console.log("Hello!");
+}</code></pre>
+        </div>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Layout Structure (Content + Sidebar)</strong>
+        <code>.journal-layout</code> <code>.blog-content</code> <code>.blog-sidebar</code>
+        <span class="component-note">Defines the two-column layout structure. Visual demo not practical here.</span>
+        <a href="style-guide.html#layout">Style Guide: Layout Systems</a>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Sidebar Content</strong>
+        <code>.sidebar-title</code> <code>.entry-list</code> <code>.entry-list-item</code>
+        <span class="component-note">Components within the sidebar, typically related posts.</span>
+        <a href="style-guide.html#blog">Style Guide: Blog Components</a>
+        <!-- Demo within minimal wrapper -->
+        <div style="margin-top: 0.5rem;">
+            <div class="blog-sidebar" style="border-left: none; padding-left: 0;">
+                <h3 class="sidebar-title" style="margin-top:0; border: none;">Related Posts</h3>
+                <ul class="entry-list" style="list-style: none;">
+                    <li class="entry-list-item" style="background: none; border: none; padding: 0; margin-bottom: 1rem;">
+                        <a href="#" style="text-decoration: none;">
+                            <span class="entry-list-meta">04.10.2025</span>
+                            <h3 class="entry-list-title" style="font-size: 1rem; margin-top:0; border: none;">Related Entry Example</h3>
+                            <p class="entry-list-excerpt">Short excerpt of the related blog post...</p>
+                        </a>
+                    </li>
+                    <!-- Repeat .entry-list-item -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Post Navigation</strong>
+        <code>.post-navigation</code> <code>.post-nav-link</code>
+        <span class="component-note">Links to previous/next posts.</span>
+        <a href="style-guide.html#blog">Style Guide: Blog Components</a>
+        <!-- Demo within minimal wrapper -->
+        <div style="margin-top: 0.5rem;">
+            <nav class="post-navigation" style="border-top: none; padding-top: 0;">
+                <div class="post-nav-previous post-nav-link">
+                  <span class="post-nav-label">Previous</span>
+                  <span class="post-nav-title">Previous Post Title</span>
+                </div>
+                <div class="post-nav-next post-nav-link">
+                  <span class="post-nav-label">Next</span>
+                  <span class="post-nav-title">Next Post Title</span>
+                </div>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="pattern-item">
+        <strong>Form Elements (Potential Requirement)</strong>
+        <code>.form-group</code> <code>.form-input</code> <code>.button</code>
+        <span class="component-note">May be needed for comments section. Requires design/implementation if added.</span>
+        <a href="style-guide.html#forms">Style Guide: Form Elements</a>
+        <a href="style-guide.html#buttons">Style Guide: Buttons & CTAs</a>
+        <!-- Demo within minimal wrapper -->
+        <div style="margin-top: 0.5rem;">
+            <form style="max-width: 400px;">
+                <div class="form-group">
+                  <label for="commentName" class="form-label">Name</label>
+                  <input id="commentName" type="text" class="form-input" placeholder="Your Name" />
+                </div>
+                 <div class="form-group">
+                  <label for="commentText" class="form-label">Comment</label>
+                  <textarea id="commentText" class="form-textarea" rows="2" placeholder="Your Comment..."></textarea>
+                </div>
+                <button type="submit" class="button">Submit Comment</button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer Showcase (No Wrapper) -->
+    <h3>Footer</h3>
+    <p>
+        <code>.footer-bar</code>
+        <!-- Note: No specific footer section in style guide currently -->
+    </p>
+    <span class="component-note">Simple footer bar. Assumed present on main pages.</span>
+    <div class="direct-showcase">
+        <div class="footer-bar" style="position: static;">© 2024 Blue Marlin OS</div>
+    </div>
+    
+  </div>
+
+  <!-- Include main JS for potential theme toggle interaction on this page -->
+  <script src="scripts.js"></script>
+  <script>
+    // Basic theme toggle functionality for demo buttons on this page
+    document.querySelectorAll('.theme-toggle').forEach(toggle => { // Include header toggles too
+      toggle.addEventListener('click', function() {
+        const htmlEl = document.documentElement;
+        htmlEl.classList.toggle('phase-origin');
+        // Update ALL toggle knobs on the page
+        document.querySelectorAll(".theme-toggle").forEach(t => {
+             const knob = t.querySelector('.theme-toggle-knob');
+             const icon = t.querySelector('.theme-toggle-icon');
+             if (htmlEl.classList.contains('phase-origin')) {
+                 knob.style.left = '2px'; 
+                 icon.textContent = '☀';
+             } else {
+                 knob.style.left = '26px';
+                 icon.textContent = '☾';
+             }
+        });
+      });
+    });
+    // Ensure demo toggles reflect initial theme
+    window.addEventListener('DOMContentLoaded', () => {
+        const isOrigin = document.documentElement.classList.contains('phase-origin');
+        document.querySelectorAll('.theme-toggle').forEach(toggle => {
+            const knob = toggle.querySelector('.theme-toggle-knob');
+            const icon = toggle.querySelector('.theme-toggle-icon');
+             if (isOrigin) {
+                knob.style.left = '2px'; 
+                icon.textContent = '☀';
+             } else {
+                knob.style.left = '26px';
+                icon.textContent = '☾';
+             }
+        });
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" class="phase-apex">
+<head>
+  <!--
+    ========================================================================
+    BLUE MARLIN OS - Project Detail Page
+    ------------------------------------------------------------------------
+    - Detailed project showcase with extended information
+    - Features comprehensive project imagery and specifications
+    - Includes navigation between related projects
+    - Maintains consistent theme and design patterns
+    ========================================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous Mapping Vehicle | BLUE MARLIN OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!--
+    Underwater Environment
+    - Decorative background with light shafts and particles
+    - Creates immersive atmosphere that changes with theme
+    - aria-hidden to exclude from screen readers
+  -->
+  <div class="underwater-environment" aria-hidden="true">
+    <div class="light-shafts">
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!--
+    Header
+    - Contains system branding, status elements, and navigation
+    - Theme toggle for switching between night/day modes
+    - Includes both desktop and mobile navigation options
+  -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <span>BLUE MARLIN</span> OS
+      </a>
+      <div class="header-controls">
+        <div class="location-time">
+          <div class="status-indicator"></div>
+          <span>DEPTH: 423M | 11:42:18</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch to day mode">
+          <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+        </button>
+      </div>
+    </div>
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="index.html#projects">PROJECTS</a></li>
+        <li><a href="index.html#journal">JOURNAL</a></li>
+        <li><a href="index.html#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!--
+    Mobile Navigation
+    - Bottom-fixed navigation for small screens
+    - Provides core site section links
+    - Hidden on desktop viewports (>768px)
+  -->
+  <nav class="mobile-nav">
+    <a href="index.html">HOME</a>
+    <a href="index.html#projects" class="active">PROJECTS</a>
+    <a href="index.html#journal">JOURNAL</a>
+  </nav>
+
+  <!--
+    Project Hero Section
+    - Large feature image of the project
+    - Project title, category, and brief introduction
+    - Project metadata including year, depth rating, and status
+    - Visual impact with full-width design
+  -->
+  <section class="project-hero">
+    <div class="project-hero-image">
+      <img src="https://via.placeholder.com/1500x700/101a26/3a4e6a" alt="Autonomous Mapping Vehicle">
+    </div>
+    <div class="project-hero-content">
+      <div class="project-meta">
+        <span class="project-category">EXPLORATION SYSTEMS</span>
+        <span class="project-date">2025</span>
+      </div>
+      <h1 class="project-title">Autonomous Mapping Vehicle</h1>
+      <p class="project-intro">
+        Advanced seafloor mapping system using ML-enhanced sonar interpretation for high-resolution 
+        terrain modeling in near-zero visibility conditions.
+      </p>
+      <div class="project-specs">
+        <div class="spec">
+          <div class="spec-label">Depth Rating</div>
+          <div class="spec-value">2,500m</div>
+        </div>
+        <div class="spec">
+          <div class="spec-label">Deployment</div>
+          <div class="spec-value">Active</div>
+        </div>
+        <div class="spec">
+          <div class="spec-label">Status</div>
+          <div class="spec-value">Field Testing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    Project Content Section
+    - Detailed project description with multiple content blocks
+    - Technical specifications and diagrams
+    - Showcases interface and control system details
+    - Maintains consistent visual style with the rest of the site
+  -->
+  <div class="content-container project-content">
+    <div class="project-section">
+      <h2 class="section-title">Overview</h2>
+      <p>
+        The Autonomous Mapping Vehicle (AMV) represents the latest in BLUE MARLIN OS applications, 
+        designed to create high-resolution seafloor maps in environments where traditional mapping 
+        techniques fail. The AMV operates at depths up to 2,500 meters and can function in total 
+        darkness, turbid waters, and varied terrain types.
+      </p>
+      <p>
+        Using an advanced neural network trained on millions of sonar readings, the AMV can identify, 
+        classify, and map geological features with precision that exceeds human capabilities. The 
+        system's multi-beam sensors work in conjunction with its ML processing unit to build 
+        accurate 3D models even in challenging conditions.
+      </p>
+    </div>
+
+    <div class="project-section">
+      <h2 class="section-title">Technical Approach</h2>
+      <div class="project-columns">
+        <div class="text-column">
+          <p>
+            The AMV system integrates several BLUE MARLIN OS core modules to achieve its 
+            mapping capabilities:
+          </p>
+          <ul class="project-list">
+            <li>
+              <strong>Acoustic Sensor Array</strong> - Multi-frequency sonar system with 360° coverage and variable resolution modes
+            </li>
+            <li>
+              <strong>ML Processing Unit</strong> - Real-time feature recognition and classification system
+            </li>
+            <li>
+              <strong>Autonomous Navigation</strong> - Terrain-relative positioning that functions without GPS
+            </li>
+            <li>
+              <strong>Data Compression</strong> - Efficient storage of massive point-cloud datasets
+            </li>
+          </ul>
+          <p>
+            All systems operate within the BLUE MARLIN OS framework, taking advantage of its 
+            pressure-optimized interface systems and fail-safe redundancies.
+          </p>
+        </div>
+        <div class="image-column">
+          <img src="https://via.placeholder.com/600x400/101a26/3a4e6a" alt="Technical diagram of AMV system">
+          <div class="image-caption">AMV System Architecture</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-section">
+      <h2 class="section-title">Interface & Control</h2>
+      <div class="project-images">
+        <div class="project-image">
+          <img src="https://via.placeholder.com/600x400/101a26/3a4e6a" alt="AMV control interface">
+          <div class="image-caption">Main Control Interface</div>
+        </div>
+        <div class="project-image">
+          <img src="https://via.placeholder.com/600x400/101a26/3a4e6a" alt="3D mapping visualization">
+          <div class="image-caption">Real-time 3D Mapping Visualization</div>
+        </div>
+      </div>
+      <p>
+        The AMV control system uses BLUE MARLIN OS's phase-adaptive interface, automatically 
+        adjusting contrast and information density based on operator depth and ambient conditions. 
+        The system provides multiple control modes:
+      </p>
+      <ul class="project-list">
+        <li><strong>Direct Control</strong> - Real-time operator guidance with haptic feedback</li>
+        <li><strong>Mission Planning</strong> - Pre-programmed survey patterns with terrain adaptation</li>
+        <li><strong>Autonomous Mode</strong> - AI-driven exploration with objective-based decision making</li>
+      </ul>
+    </div>
+
+    <div class="project-section">
+      <h2 class="section-title">Applications</h2>
+      <p>
+        The AMV system has been deployed in several research and commercial applications:
+      </p>
+      <ul class="project-list">
+        <li>Hydrothermal vent field mapping in the Mid-Atlantic Ridge</li>
+        <li>Subsea cable route surveys in the Pacific basin</li>
+        <li>Seafloor mineral deposit assessment for sustainable resource evaluation</li>
+        <li>Archaeological site documentation of historic shipwrecks</li>
+      </ul>
+      <div class="quote-box">
+        <blockquote>
+          "The AMV has revolutionized our understanding of deep-sea environments. We're mapping features 
+          with a level of detail previously unimaginable at these depths."
+        </blockquote>
+        <cite>— Dr. Elena Marquez, Deep Sea Exploration Institute</cite>
+      </div>
+    </div>
+  </div>
+
+  <!--
+    Related Projects Section
+    - Showcases related or similar projects
+    - Encourages further exploration of the website
+    - Uses consistent card design with the main projects section
+    - Maintains visual hierarchy and information architecture
+  -->
+  <section class="content-container">
+    <h2 class="section-title">Related Projects</h2>
+    <div class="projects-grid">
+      <a href="project.html" class="project-card">
+        <div class="card-image-container">
+          <img src="https://via.placeholder.com/600x400/101a26/3a4e6a" alt="Hydrothermal Research Platform">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Hydrothermal Research Platform</h3>
+          <p class="card-desc">
+            Monitoring tools for extreme temperature environments near underwater vents.
+          </p>
+          <span class="view-project">View Project →</span>
+        </div>
+      </a>
+      <a href="project.html" class="project-card">
+        <div class="card-image-container">
+          <img src="https://via.placeholder.com/600x400/101a26/3a4e6a" alt="Abyssal Communication Network">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Abyssal Communication Network</h3>
+          <p class="card-desc">
+            Distributed node system for reliable data transmission across the ocean floor.
+          </p>
+          <span class="view-project">View Project →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!--
+    Project Navigation
+    - Allows users to navigate between different projects
+    - Previous and next project links with titles
+    - Visual indicators for navigation direction
+    - Maintains consistent spacing and design
+  -->
+  <div class="project-navigation">
+    <a href="#" class="prev-project">
+      <span class="nav-label">Previous Project</span>
+      <span class="nav-title">Pressure-Adaptive Interface</span>
+    </a>
+    <a href="#" class="next-project">
+      <span class="nav-label">Next Project</span>
+      <span class="nav-title">Hydrothermal Research Platform</span>
+    </a>
+  </div>
+
+  <!--
+    Footer Bar
+    - Contains copyright information
+    - Provides spacing above the mobile navigation
+    - Present across all pages for consistency
+  -->
+  <div class="footer-bar">
+    &copy; 2025 BLUE MARLIN OS &mdash; All rights reserved.
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html> 

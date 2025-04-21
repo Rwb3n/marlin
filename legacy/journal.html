@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" class="phase-apex">
+<head>
+  <!--
+    ========================================================================
+    BLUE MARLIN OS - Journal Entry Page
+    ------------------------------------------------------------------------
+    - Detailed view of individual journal entries with related content
+    - Features consistent navigation and theme system across all pages
+    - Includes author information, entry metadata, and content sections
+    - Sidebar with related entries and quick navigation options
+    ========================================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal Entry | BLUE MARLIN OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!--
+    Underwater Environment
+    - Decorative background with light shafts and particles
+    - Creates immersive atmosphere that changes with theme
+    - aria-hidden to exclude from screen readers
+  -->
+  <div class="underwater-environment" aria-hidden="true">
+    <div class="light-shafts">
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!--
+    Header
+    - Contains system branding, status elements, and navigation
+    - Theme toggle for switching between night/day modes
+    - Includes both desktop and mobile navigation options
+  -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <span>BLUE MARLIN</span> OS
+      </a>
+      <div class="header-controls">
+        <div class="location-time">
+          <div class="status-indicator"></div>
+          <span>DEPTH: 423M | 11:42:18</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch to day mode">
+          <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+        </button>
+      </div>
+    </div>
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="index.html#projects">PROJECTS</a></li>
+        <li><a href="index.html#journal">JOURNAL</a></li>
+        <li><a href="index.html#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!--
+    Mobile Navigation
+    - Bottom-fixed navigation for small screens
+    - Provides core site section links
+    - Hidden on desktop viewports (>768px)
+  -->
+  <nav class="mobile-nav">
+    <a href="index.html">HOME</a>
+    <a href="index.html#projects">PROJECTS</a>
+    <a href="index.html#journal" class="active">JOURNAL</a>
+  </nav>
+
+  <!--
+    Main Content
+    - Uses glass-morphic .content-container for improved readability
+    - Two-column layout on larger screens with sidebar
+    - Single-column stacked layout on mobile/tablet
+  -->
+  <main>
+    <section class="content-container">
+      <div class="journal-layout">
+        <!--
+          Journal Main Content
+          - Header with metadata (date, tags, title)
+          - Author information with profile image
+          - Article sections with typography optimized for readability
+          - Styled blockquotes and code examples
+        -->
+        <article class="blog-main">
+          <header class="blog-header">
+            <div class="blog-meta">
+              <span class="blog-date">04.12.2025</span>
+              <span class="blog-tag">RESEARCH</span>
+              <span class="blog-tag">DEEP SEA</span>
+              <span class="blog-tag">UX</span>
+            </div>
+            <h1 class="blog-title">Interface Design for Extreme Depths</h1>
+            <div class="author-info">
+              <div class="author-image">
+                <img src="https://via.placeholder.com/80" alt="Author avatar">
+              </div>
+              <div class="author-details">
+                <div class="author-name">Dr. Eliza Chen</div>
+                <div class="author-role">Lead UX Researcher</div>
+              </div>
+            </div>
+          </header>
+          
+          <section class="blog-content">
+            <p class="lead-paragraph">
+              As we develop interfaces for vehicles and systems operating at extreme depths, 
+              traditional UX paradigms must be challenged and reimagined. This journal entry 
+              explores our research into pressure-adaptive interfaces.
+            </p>
+            
+            <p>
+              The challenges of designing digital interfaces for deep-sea environments go far beyond 
+              waterproofing and pressure resistance. At depths below 1000 meters, human perception 
+              changes significantly due to increased nitrogen narcosis and subtle shifts in cognitive 
+              processing. Our research indicates that interface elements must be adjusted not just for 
+              the physical environment, but for the altered state of the human operator.
+            </p>
+            
+            <h2>Key Research Findings</h2>
+            
+            <p>
+              We conducted a series of tests at varying depths (surface, 500m, 1000m, and 1500m) 
+              to measure changes in perception and interaction patterns. The following patterns emerged:
+            </p>
+            
+            <ul class="styled-list">
+              <li>Touch precision decreases approximately 12% for every 500m increase in depth</li>
+              <li>Color perception shifts toward the blue spectrum below 800m</li>
+              <li>Response time to visual stimuli increases by 8-15% at extreme depths</li>
+              <li>Contrast sensitivity improves in low-light conditions typical of deep operations</li>
+            </ul>
+            
+            <blockquote>
+              "The most striking observation was not just the quantitative changes in interaction metrics, 
+              but the qualitative feedback from operators who reported that interfaces 'felt different' at 
+              depth, even when viewing identical designs."
+              <cite>— Research Note #42, Deep Operation Series</cite>
+            </blockquote>
+            
+            <h2>Pressure-Adaptive Design Principles</h2>
+            
+            <p>
+              Based on our findings, we've developed a set of design principles specifically for 
+              pressure-adaptive interfaces:
+            </p>
+            
+            <h3>1. Progressive Sizing</h3>
+            
+            <p>
+              Interface elements should gradually increase in size as depth increases. Our adaptive 
+              algorithm adjusts tap targets by a factor of 1.025 for every 100m of depth.
+            </p>
+            
+            <h3>2. Contrast Modulation</h3>
+            
+            <p>
+              As color perception shifts at depth, our interfaces dynamically adjust contrast ratios 
+              to maintain readability, with an emphasis on blue-yellow differentiation rather than 
+              red-green.
+            </p>
+            
+            <pre><code>// Example contrast modulation based on depth
+const calculateContrastRatio = (depthInMeters) => {
+  const baseRatio = 4.5; // WCAG AA standard
+  const depthFactor = Math.min(depthInMeters / 1000, 1);
+  return baseRatio + (depthFactor * 3); // Max 7.5:1 at 1000m+
+};</code></pre>
+            
+            <h3>3. Temporal Compensation</h3>
+            
+            <p>
+              To account for increased response times, critical notifications persist longer based on depth, 
+              and animations are slowed proportionally to maintain perceived fluidity.
+            </p>
+            
+            <figure class="image-figure">
+              <img src="https://via.placeholder.com/800x400/101a26/3a4e6a" alt="Depth vs. Response Time Graph">
+              <figcaption>Fig 1: Correlation between depth and operator response times, showing a non-linear increase beyond 800m.</figcaption>
+            </figure>
+            
+            <h2>Implementation in BLUE MARLIN OS</h2>
+            
+            <p>
+              These principles are now core to the BLUE MARLIN OS interface system. Rather than creating 
+              static interfaces that work adequately across all depths, we've implemented dynamic adjustments 
+              that respond in real-time to depth changes.
+            </p>
+            
+            <p>
+              The system reads current depth from vessel sensors and applies mathematical transformations 
+              to interface elements across four key parameters:
+            </p>
+            
+            <ol class="styled-list numbered">
+              <li>Size (touch targets, text, spacing)</li>
+              <li>Contrast (background/foreground ratios)</li>
+              <li>Color (spectral adjustments)</li>
+              <li>Timing (animations, notifications, feedback)</li>
+            </ol>
+            
+            <h3>Early Results</h3>
+            
+            <p>
+              Initial testing with the pressure-adaptive interface shows a 32% improvement in operator 
+              accuracy and a 28% reduction in task completion time when compared to conventional 
+              interfaces at depths below 1000m.
+            </p>
+            
+            <blockquote>
+              "It's remarkable how much more natural the system feels. At 1200 meters, the standard 
+              interface feels sluggish and disconnected, while the adaptive system maintains the same 
+              fluid feeling as surface operations."
+              <cite>— Test Operator #7, Pilot Program</cite>
+            </blockquote>
+            
+            <h2>Next Steps</h2>
+            
+            <p>
+              Our research continues with a focus on personalization. We're finding significant variation 
+              in how individuals respond to depth changes, suggesting that a one-size-fits-all approach, 
+              even with depth adaptation, may be insufficient for optimal performance.
+            </p>
+            
+            <p>
+              Phase 2 of our research will explore machine learning algorithms that can identify individual 
+              patterns and adjust interfaces based on both depth and personal interaction history.
+            </p>
+            
+            <div class="article-footer">
+              <p>
+                <em>This research was conducted as part of the Deep Interaction Initiative, funded by 
+                the Oceanic Technology Advancement Grant (OTAG-2025-13).</em>
+              </p>
+              <div class="article-tags">
+                <a href="#" class="tag-link">research</a>
+                <a href="#" class="tag-link">interface</a>
+                <a href="#" class="tag-link">pressure-adaptive</a>
+                <a href="#" class="tag-link">deep-sea</a>
+              </div>
+            </div>
+          </section>
+        </article>
+        <!--
+          Sidebar
+          - Related Entries section with thumbnails and excerpts
+          - Quick navigation links for easy access to key pages
+          - Author profile with additional information
+          - Stacks below main content on mobile/tablet (<960px)
+        -->
+        <aside class="blog-sidebar">
+          <h2 class="sidebar-title">Related Entries</h2>
+          <ul class="entry-list">
+            <li class="entry-list-item">
+              <a href="#">
+                <span class="entry-list-meta">03.28.2025</span>
+                <h3 class="entry-list-title">Haptic Feedback at 2000m</h3>
+                <p class="entry-list-excerpt">
+                  New developments in pressure-sensitive tactile feedback mechanisms.
+                </p>
+              </a>
+            </li>
+            <li class="entry-list-item">
+              <a href="#">
+                <span class="entry-list-meta">02.14.2025</span>
+                <h3 class="entry-list-title">Color Theory Under Pressure</h3>
+                <p class="entry-list-excerpt">
+                  How perception changes at depth and implications for UI design.
+                </p>
+              </a>
+            </li>
+            <li class="entry-list-item">
+              <a href="#">
+                <span class="entry-list-meta">01.05.2025</span>
+                <h3 class="entry-list-title">Human Factors in Deep Diving</h3>
+                <p class="entry-list-excerpt">
+                  Cognitive changes that affect operator performance in extreme environments.
+                </p>
+              </a>
+            </li>
+          </ul>
+          <h2 class="sidebar-title" style="margin-top: 3rem;">Quick Links</h2>
+          <ul class="quick-links">
+            <li>
+              <a href="index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Return to Home
+              </a>
+            </li>
+            <li>
+              <a href="index.html#journal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                All Journal Entries
+              </a>
+            </li>
+            <li>
+              <a href="index.html#contact">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Contact Author
+              </a>
+            </li>
+          </ul>
+          <div class="author-profile">
+            <h2 class="sidebar-title">About the Author</h2>
+            <div class="author-bio">
+              <p>
+                Dr. Eliza Chen is the Lead UX Researcher at BLUE MARLIN OS, specializing in 
+                human-computer interaction in extreme environments. With over a decade of 
+                experience in cognitive psychology and interface design, she has published 
+                extensively on adaptive systems.
+              </p>
+              <div class="author-social">
+                <a href="#" class="social-link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                  </svg>
+                </a>
+                <a href="#" class="social-link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!--
+    Footer Bar
+    - Contains copyright information
+    - Provides spacing above the mobile navigation
+    - Present across all pages for consistency
+  -->
+  <div class="footer-bar">
+    &copy; 2025 BLUE MARLIN OS &mdash; All rights reserved.
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html> 

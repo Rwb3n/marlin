@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" class="phase-apex">
+<head>
+  <!--
+    ========================================================================
+    BLUE MARLIN OS - Collection Page
+    ------------------------------------------------------------------------
+    - Lists all blog posts and projects in a responsive grid
+    - Uses dual theme system (night: phase-apex, day: phase-origin)
+    ========================================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Projects & Posts | BLUE MARLIN OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Underwater Environment -->
+  <div class="underwater-environment" aria-hidden="true">
+    <div class="light-shafts">
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <span>BLUE MARLIN</span> OS
+      </a>
+      <div class="header-controls">
+        <div class="location-time">
+          <div class="status-indicator"></div>
+          <span>DEPTH: 423M | 11:42:18</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch to day mode">
+          <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+        </button>
+      </div>
+    </div>
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="#" class="active">PROJECTS</a></li>
+        <li><a href="#">JOURNAL</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav">
+    <a href="index.html">HOME</a>
+    <a href="#" class="active">PROJECTS</a>
+    <a href="#">JOURNAL</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <section class="content-container">
+      <div class="hero" style="margin-bottom: 2.5rem;">
+        <h1>
+          <span>BLUE MARLIN OS</span>
+          All Projects & Posts
+        </h1>
+        <p>
+          Explore every project and journal entry in one place. Use the filters to find what interests you most.
+        </p>
+      </div>
+      <div class="journal-layout">
+        <div>
+          <!-- Filter Bar (optional, can be expanded) -->
+          <div style="margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+            <span class="component-label">Filter:</span>
+            <a href="#" class="button button-small">All</a>
+            <a href="#" class="button-outline button-small">Projects</a>
+            <a href="#" class="button-outline button-small">Journal</a>
+            <a href="#" class="button-outline button-small">UI/UX</a>
+            <a href="#" class="button-outline button-small">Performance</a>
+          </div>
+          <!-- Grid of Cards -->
+          <div class="journal-grid">
+            <!-- Project Card Example -->
+            <div class="journal-card">
+              <div class="journal-date">04.12.2025</div>
+              <h3>Project Deep Dive</h3>
+              <p>
+                Immersive visual interface for rapid data analysis, inspired by underwater predator vision systems and tactical displays.
+              </p>
+              <a href="project.html" class="read-more">
+                VIEW PROJECT
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+            <!-- Blog Post Card Example -->
+            <div class="journal-card">
+              <div class="journal-date">04.12.2025</div>
+              <h3>Underwater Visibility Enhancements</h3>
+              <p>
+                Exploring new techniques for improving light shaft rendering and water caustics simulation without sacrificing performance...
+              </p>
+              <a href="blog.html" class="read-more">
+                READ MORE
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+            <!-- More cards... -->
+            <div class="journal-card">
+              <div class="journal-date">04.05.2025</div>
+              <h3>Day/Night Cycle Implementation</h3>
+              <p>
+                Created a seamless transition between the phase-origin (day) and phase-apex (night) modes with animated water surface reflections...
+              </p>
+              <a href="blog.html" class="read-more">
+                READ MORE
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+            <div class="journal-card">
+              <div class="journal-date">03.28.2025</div>
+              <h3>Modular Component Architecture</h3>
+              <p>
+                Designed a flexible component system using Astro and React that allows for easy content management and dynamic rendering...
+              </p>
+              <a href="project.html" class="read-more">
+                VIEW PROJECT
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+            <div class="journal-card">
+              <div class="journal-date">02.14.2025</div>
+              <h3>Apex Dashboard</h3>
+              <p>
+                High-contrast dashboard for real-time analytics and monitoring.
+              </p>
+              <a href="project.html" class="read-more">
+                VIEW PROJECT
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Optional Sidebar -->
+        <aside class="blog-sidebar">
+          <h2 class="sidebar-title">Quick Links</h2>
+          <ul style="list-style: none;">
+            <li style="margin-bottom: 0.75rem;">
+              <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Return to Home
+              </a>
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <a href="project.html" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+                All Projects
+              </a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <div class="footer-bar">
+    &copy; 2025 BLUE MARLIN OS &mdash; All rights reserved.
+  </div>
+  <script src="scripts.js"></script>
+</body>
+</html> 

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="phase-origin">
+<head>
+  <!--
+    ========================================================================
+    BLUE MARLIN OS - Homepage
+    ------------------------------------------------------------------------
+    - Main landing page for the BLUE MARLIN OS website
+    - Features primary navigation, theme system, and key content sections
+    - Showcases projects, journal entries and contact information
+    - Implements responsive design with mobile navigation
+    ========================================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLUE MARLIN OS | Deep Sea Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sky Environment Removed -->
+
+  <!--
+    Underwater Environment
+    - Decorative background with light shafts and particles
+    - Creates immersive atmosphere that changes with theme
+    - aria-hidden to exclude from screen readers
+  -->
+  <div class="underwater-environment" aria-hidden="true">
+    <div class="light-shafts">
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!--
+    Header
+    - Contains system branding, status elements, and navigation
+    - Theme toggle for switching between night/day modes
+    - Includes both desktop and mobile navigation options
+  -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <span>BLUE MARLIN</span> OS
+      </a>
+      <div class="header-controls">
+        <div class="location-time">
+          <div class="status-indicator"></div>
+          <span>DEPTH: 423M | 11:42:18</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch to day mode">
+          <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+        </button>
+      </div>
+    </div>
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="#projects">PROJECTS</a></li>
+        <li><a href="#journal">JOURNAL</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!--
+    Mobile Navigation
+    - Bottom-fixed navigation for small screens
+    - Provides core site section links
+    - Hidden on desktop viewports (>768px)
+  -->
+  <nav class="mobile-nav">
+    <a href="#" class="active">HOME</a>
+    <a href="#projects">PROJECTS</a>
+    <a href="#journal">JOURNAL</a>
+  </nav>
+
+  <!--
+    Hero Section
+    - Primary introduction to BLUE MARLIN OS
+    - Large title and animated subtitle for visual impact
+    - Brief system description and mission statement
+    - Call-to-action button linking to project details
+  -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">DEEP SEA<br>INTERFACE</h1>
+      <p class="hero-subtitle">Operating at <span class="typing" data-text='["extreme depths", "high pressure", "zero visibility", "absolute precision"]'></span></p>
+      <p class="hero-desc">
+        BLUE MARLIN OS is an advanced operating system designed for deep-sea engineering,
+        exploration, and research operations. Built for specialized submersibles and remote
+        equipment, it functions reliably where conventional systems fail.
+      </p>
+      <a href="#projects" class="button primary-button">View Projects</a>
+    </div>
+  </section>
+
+  <!--
+    Projects Section
+    - Displays featured engineering projects in a grid layout
+    - Each project card includes image, title, and brief description
+    - Cards link to detailed project pages
+    - Responsive grid adapts to various screen sizes
+  -->
+  <section id="projects" class="content-container">
+    <h2 class="section-title">Projects</h2>
+    <p class="section-subtitle">
+      Current applications of BLUE MARLIN OS across deep-sea environments
+    </p>
+    <div class="projects-grid">
+      <a href="project.html" class="project-card">
+        <div class="card-image-container">
+          <img src="paceholder_3-2.png" alt="Autonomous Mapping Vehicle">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Autonomous Mapping Vehicle</h3>
+          <p class="card-desc">
+            Advanced seafloor mapping systems using ML-enhanced sonar interpretation.
+          </p>
+          <span class="view-project">View Project →</span>
+        </div>
+      </a>
+      <a href="project.html" class="project-card">
+        <div class="card-image-container">
+          <img src="paceholder_3-2.png" alt="Hydrothermal Research Platform">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Hydrothermal Research Platform</h3>
+          <p class="card-desc">
+            Monitoring tools for extreme temperature environments near underwater vents.
+          </p>
+          <span class="view-project">View Project →</span>
+        </div>
+      </a>
+      <a href="project.html" class="project-card">
+        <div class="card-image-container">
+          <img src="paceholder_3-2.png" alt="Abyssal Communication Network">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Abyssal Communication Network</h3>
+          <p class="card-desc">
+            Distributed node system for reliable data transmission across the ocean floor.
+          </p>
+          <span class="view-project">View Project →</span>
+        </div>
+      </a>
+      <a href="project.html" class="project-card">
+        <div class="card-image-container">
+          <img src="paceholder_3-2.png" alt="Pressure-Adaptive Interface">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Pressure-Adaptive Interface</h3>
+          <p class="card-desc">
+            Human-machine interfaces that adjust to cognitive changes at extreme depths.
+          </p>
+          <span class="view-project">View Project →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 
+    Journal Section (Using structure from home.html)
+    - Displays recent journal entries in cards
+    - Uses .journal-grid layout
+   -->
+  <section id="journal" class="content-container">
+    <div class="section-header">
+      <h2><span>RECENT</span> JOURNAL</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="journal-grid">
+      <!-- Journal Entry 1 -->
+      <div class="journal-card">
+        <div class="journal-date">04.12.2025</div>
+        <h3>Underwater Visibility Enhancements</h3>
+        <p>
+          Exploring new techniques for improving light shaft rendering and water caustics simulation without sacrificing performance...
+        </p>
+        <a href="#" class="read-more">
+          READ MORE
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+      <!-- Journal Entry 2 -->
+      <div class="journal-card">
+        <div class="journal-date">04.05.2025</div>
+        <h3>Day/Night Cycle Implementation</h3>
+        <p>
+          Created a seamless transition between the phase-origin (day) and phase-apex (night) modes with animated water surface reflections...
+        </p>
+        <a href="#" class="read-more">
+          READ MORE
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+      <!-- Journal Entry 3 -->
+      <div class="journal-card">
+        <div class="journal-date">03.28.2025</div>
+        <h3>Modular Component Architecture</h3>
+        <p>
+          Designed a flexible component system using Astro and React that allows for easy content management and dynamic rendering...
+        </p>
+        <a href="#" class="read-more">
+          READ MORE
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="view-all">
+      <a href="#" class="read-more">
+        VIEW ALL JOURNAL ENTRIES
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!--
+    Contact Section
+    - Contact form with input validation
+    - Contains fields for name, email, and message
+    - Submit button with hover effects
+    - Social media links with SVG icons
+  -->
+  <section id="contact" class="content-container">
+    <h2 class="section-title">Contact</h2>
+    <p class="component-description">
+      Interested in collaboration or have questions about our research?
+    </p>
+    <div class="contact-layout">
+      <form class="contact-form">
+        <div class="form-group">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" id="name" name="name" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" name="email" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="message" class="form-label">Message</label>
+          <textarea id="message" name="message" class="form-textarea" required></textarea>
+        </div>
+        <button type="submit" class="button">Send Message</button>
+      </form>
+      <div class="contact-info">
+        <p>
+          Our team is based at the Pacific Deep Sea Research Institute. 
+          We collaborate with research teams worldwide on advancing 
+          deep-sea technologies.
+        </p>
+        <p>
+          For urgent inquiries related to active deployments, 
+          please contact our operations team directly at 
+          <a href="mailto:ops@bluemarlinos.com">ops@bluemarlinos.com</a>
+        </p>
+        <div class="contact-social">
+          <a href="#" class="social-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+          <a href="#" class="social-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+            </svg>
+          </a>
+          <a href="#" class="social-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" class="social-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+              <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    Footer Bar
+    - Contains copyright information
+    - Provides spacing above the mobile navigation
+    - Present across all pages for consistency
+  -->
+  <div class="footer-bar">
+    &copy; 2025 BLUE MARLIN OS &mdash; All rights reserved.
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html> 

@@ -1,0 +1,355 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Archivo", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark {
+  /* Variables specifically for the Underwater Effect (Dark Mode) */
+  --color-shafts: #0a4c9e;
+  --color-particle: #ffffff;
+  --color-particle-glow: rgba(0, 132, 255, 0.8);
+}
+
+@layer base {
+  :root {
+    /* Light Theme Variables - Background & Foreground Hex, others HSL */
+    --background: #fdfcfb;       /* #fdfcfb - Using Hex directly */
+    --foreground: #0e0e0e;       /* #0e0e0e - Using Hex directly */
+    --card: 0 0% 100%;           /* #ffffff */
+    --card-foreground: 0 0% 5%;    /* #0e0e0e */
+    --popover: 0 0% 100%;          /* #ffffff */
+    --popover-foreground: 0 0% 5%; /* #0e0e0e */
+    --primary: 16 100% 50%;      /* #ff4400 */
+    --primary-foreground: 0 0% 5%; /* #0e0e0e */
+    --secondary: 36 100% 50%;    /* #ff9900 */
+    --secondary-foreground: 0 0% 5%;/* #0e0e0e */
+    --muted: 0 0% 40%;           /* #666666 */
+    --muted-foreground: 240 5% 65%;/* #a1a1aa */
+    --accent: 16 100% 50%;       /* #ff4400 */
+    --accent-foreground: 0 0% 5%;  /* #0e0e0e */
+    --destructive: 0 84% 60%;      /* #ef4444 */
+    --destructive-foreground: 40 20% 98%;/* #fdfcfb */
+    --border: 0 0% 80%;          /* #cccccc */
+    --input: 0 0% 80%;           /* #cccccc */
+    --ring: 16 100% 50%;         /* #ff4400 */
+    --radius: 0.5rem;
+
+    /* Semantic Colors - Using HSL */
+    --success: 158 82% 39%;      /* #10b981 */
+    --success-foreground: 40 20% 98%; /* #fdfcfb */
+    --warning: 39 92% 50%;      /* #f59e0b */
+    --warning-foreground: 0 0% 5%; /* #0e0e0e */
+    --info: 217 91% 60%;        /* #3b82f6 */
+    --info-foreground: 40 20% 98%; /* #fdfcfb */
+  }
+ 
+  html.dark {
+    /* Dark Theme Variable Overrides (Keep HSL for now) */
+    --background: 216 50% 5%;  /* #050c14 */
+    --foreground: 213 27% 90%; /* #e6edf5 */
+    --card: 224 39% 11%;       /* #111827 */
+    --card-foreground: 213 27% 90%; /* #e6edf5 */
+    --popover: 224 39% 11%;
+    --popover-foreground: 213 27% 90%;
+    --primary: 204 100% 50%; /* #00aaff */
+    --primary-foreground: 216 50% 5%; /* #050c14 */
+    --secondary: 190 100% 50%;/* #00ddff */
+    --secondary-foreground: 216 50% 5%; /* #050c14 */
+    --muted: 223 9% 65%;       /* #9ca3af */
+    --muted-foreground: 215 20% 65%; /* Light grey for contrast #a1a1aa */
+    --accent: 214 100% 50%;   /* #0084ff */
+    --accent-foreground: 213 27% 90%; /* #e6edf5 */
+    --destructive: 0 84% 60%; /* #ef4444 */
+    --destructive-foreground: 213 27% 90%; /* #e6edf5 */
+    --border: 215 19% 35%;     /* #4a5568 */
+    --input: 215 19% 35%;      /* #4a5568 */
+    --ring: 214 100% 50%;     /* #0084ff */
+
+    /* Semantic Overrides (Keep HSL for now) */
+    --success: 158 64% 42%;   /* #10b981 */
+    --success-foreground: 216 50% 5%; /* #050c14 */
+    --warning: 38 92% 51%;   /* #f59e0b */
+    --warning-foreground: 216 50% 5%; /* #050c14 */
+    --info: 217 91% 60%;    /* #3b82f6 */
+    --info-foreground: 213 27% 90%; /* #e6edf5 */
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Archivo", system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+}
+
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+a:hover {
+}
+
+.site-container {
+  min-height: 100vh;
+  width: 100%;
+}
+
+h1 {
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Blog/Journal Styling */
+/* Blog Post Content */
+.blog-header {
+  margin-bottom: 2rem;
+}
+
+.blog-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+}
+
+.blog-date {
+  display: inline-block;
+  padding-right: 1rem;
+  border-right: 1px solid currentColor;
+  margin-right: 1rem;
+}
+
+.blog-tag {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.blog-title {
+  font-size: clamp(1.5rem, 6vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.blog-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.author-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.author-role {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.blog-content p,
+.blog-content ul,
+.blog-content ol {
+  margin-bottom: 1.5rem;
+}
+
+.blog-content h2 {
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+}
+
+.blog-content h3 {
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-content ul,
+.blog-content ol {
+  padding-left: 1.5rem;
+}
+
+.blog-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0 2rem;
+}
+
+.blog-content pre {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.blog-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Sidebar */
+.sidebar-title {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.entry-list {
+  list-style: none;
+}
+
+.entry-list-item {
+  margin-bottom: 1.5rem;
+}
+
+.entry-list-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s;
+}
+
+.entry-list-title:hover {
+  color: var(--color-accent);
+}
+
+.entry-list-excerpt {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Post Navigation */
+.post-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  gap: 1rem;
+}
+
+.post-nav-link {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .post-nav-link {
+    width: 48%;
+  }
+}
+
+.post-nav-previous {
+  text-align: left;
+}
+
+.post-nav-next {
+  text-align: right;
+}
+
+.post-nav-label {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+}
+
+.post-nav-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.post-nav-title:hover {
+  color: var(--color-accent);
+}
+
+/* Button Ripple Effect */
+.button-ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0.2);
+  animation: ripple 3000ms linear;
+  background-color: rgba(255, 255, 255, .01);
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(9);
+    opacity: 0.1;
+  }
+}
+
+/* Add specific hover style for adjacent navigation links */
+/* .adjacent-nav-link:hover span { 
+  color: hsl(var(--primary));
+} */
+
+/* Apply hover styles */
+/* Dark mode uses variable (works) */
+/* html.dark .adjacent-nav-link:hover span {
+  color: hsl(var(--primary)); 
+} */
+/* Light mode uses direct hex code & higher specificity (testing fix) */
+/* html:not(.dark) .adjacent-nav-link:hover span.text-muted-foreground,
+html:not(.dark) .adjacent-nav-link:hover span.text-foreground {
+  color: #ff4400; // Direct light primary color 
+} */

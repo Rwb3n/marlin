@@ -1,0 +1,19 @@
+/* Styles for UnderwaterEnvironment.tsx */
+
+/* 
+  Main container for the entire underwater effect.
+  - Fixed position to cover the viewport.
+  - Sits behind main content (z-index: 0).
+  - Allows interactions with elements underneath (pointer-events: none).
+  - Prevents overflow from causing scrollbars.
+*/
+.underwaterEnvironment {
+  position: fixed; /* Reverted: Removed !important */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0; /* Adjust if needed based on header/footer z-index */
+  overflow: hidden;
+} 

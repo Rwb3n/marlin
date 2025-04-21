@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" class="phase-apex">
+<head>
+  <!--
+    ========================================================================
+    BLUE MARLIN OS - Journal Entry Page
+    ------------------------------------------------------------------------
+    - Detailed view for a single blog/journal entry
+    - Features responsive two-column layout on larger screens (>960px)
+    - Includes main content with article formatting and related sidebar
+    - Uses dual theme system (night: phase-apex, day: phase-origin)
+    ========================================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal | BLUE MARLIN OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!--
+    Underwater Environment
+    - Decorative background with light shafts and particles
+    - Creates immersive atmosphere that changes with theme
+    - aria-hidden to exclude from screen readers
+  -->
+  <div class="underwater-environment" aria-hidden="true">
+    <div class="light-shafts">
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!--
+    Header
+    - Contains system branding, status elements, and navigation
+    - Theme toggle for switching between night/day modes
+    - Includes both desktop and mobile navigation options
+  -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <span>BLUE MARLIN</span> OS
+      </a>
+      <div class="header-controls">
+        <div class="location-time">
+          <div class="status-indicator"></div>
+          <span>[UK - LDN] | 11:42:18</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch to day mode">
+          <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+        </button>
+      </div>
+    </div>
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="#">PROJECTS</a></li>
+        <li><a href="#">JOURNAL</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!--
+    Mobile Navigation
+    - Bottom-fixed navigation for small screens
+    - Provides core site section links
+    - Hidden on desktop viewports (>768px)
+  -->
+  <nav class="mobile-nav">
+    <a href="index.html">HOME</a>
+    <a href="#">PROJECTS</a>
+    <a href="#" class="active">JOURNAL</a>
+  </nav>
+
+  <!--
+    Main Content
+    - Uses glass-morphic .content-container for improved readability
+    - Responsive layout: single column on mobile, two columns on desktop
+    - Modified breakpoint at 960px for optimal content display
+  -->
+  <main>
+    <section class="content-container">
+      <div class="journal-layout">
+        <!--
+          Blog Main Content
+          - Article with properly structured content sections
+          - Metadata including date, categories, and title
+          - Typography optimized for longer-form reading
+          - Image handling with responsive sizing
+        -->
+        <article class="blog-main">
+          <header class="blog-header">
+            <div class="blog-meta">
+              <span class="blog-date">04.18.2025</span>
+              <span class="blog-tag">UI DESIGN</span>
+              <span class="blog-tag">ACCESSIBILITY</span>
+            </div>
+            <h1 class="blog-title">Designing for the Deep: UI in Low-Light Environments</h1>
+          </header>
+          <p>
+            Creating user interfaces that function effectively in extreme low-light conditions presents unique challenges. The BLUE MARLIN OS aims to solve these with its adaptive interface that brings clarity to the depths.
+          </p>
+          <h2>The Challenge of Depth</h2>
+          <p>
+            At extreme ocean depths, light behaves differently. Colors shift, contrast diminishes, and visual acuity becomes compromised. Traditional interface designs that rely on subtle color differences or fine details become unusable. Instead, we need interfaces that leverage high contrast, distinctive shapes, and strategic use of light.
+          </p>
+          <figure style="margin: 2rem 0;">
+            <div style="background: rgba(0,0,0,0.1); height: 200px; width: 100%; display: flex; align-items: center; justify-content: center;">
+              [Image: Low-light UI comparison]
+            </div>
+            <figcaption style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.5rem;">
+              UI comparison between standard lighting and extreme depth conditions.
+            </figcaption>
+          </figure>
+          <h2>Core Design Principles</h2>
+          <p>
+            Our approach to deep-sea interface design follows three core principles:
+          </p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-bullet"></div>
+              <div><strong>Maximum Contrast:</strong> Using high-contrast elements ensures visibility even in the most challenging conditions.</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-bullet"></div>
+              <div><strong>Strategic Illumination:</strong> Light is used sparingly and purposefully to guide attention without creating eye strain.</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-bullet"></div>
+              <div><strong>Distinctive Silhouettes:</strong> Interface elements are designed with unique shapes that are recognizable even when details are hard to discern.</div>
+            </div>
+          </div>
+          <h2>Adaptive Theming</h2>
+          <p>
+            The dual theming system in BLUE MARLIN OS isn't merely aesthetic—it's functional. The night mode (phase-apex) optimizes for low-light environments, while day mode (phase-origin) adapts for surface operations where sunlight can create glare on screens.
+          </p>
+          <p>
+            By leveraging CSS variables, we've created a system that can transition smoothly between these modes, ensuring operators always have the optimal interface for their current depth and lighting conditions.
+          </p>
+          <p>
+            <em>Stay tuned for our next article on accessibility considerations for pressure-sensitive touch interfaces in varying atmospheric conditions.</em>
+          </p>
+        </article>
+        <!--
+          Blog Sidebar
+          - Related content and navigation elements
+          - Featured on desktop as right column (>960px)
+          - Stacks below main content on mobile (<960px)
+          - Contains recent posts and category filters
+        -->
+        <aside class="blog-sidebar">
+          <h2 class="sidebar-title">Recent Entries</h2>
+          <ul class="entry-list">
+            <li class="entry-list-item">
+              <a href="#">
+                <span class="entry-list-meta">04.10.2025</span>
+                <h3 class="entry-list-title">The Evolution of Maritime User Interfaces</h3>
+                <p class="entry-list-excerpt">
+                  From paper charts to quantum holography, the story of nautical UI design.
+                </p>
+              </a>
+            </li>
+            <li class="entry-list-item">
+              <a href="#">
+                <span class="entry-list-meta">03.28.2025</span>
+                <h3 class="entry-list-title">Pressure-Sensitive Input: Beyond Touch</h3>
+                <p class="entry-list-excerpt">
+                  New paradigms for user input in variable-pressure environments.
+                </p>
+              </a>
+            </li>
+            <li class="entry-list-item">
+              <a href="#">
+                <span class="entry-list-meta">03.15.2025</span>
+                <h3 class="entry-list-title">Color Theory at 500 Meters</h3>
+                <p class="entry-list-excerpt">
+                  How color perception changes with depth and what it means for UI.
+                </p>
+              </a>
+            </li>
+          </ul>
+          <h2 class="sidebar-title" style="margin-top: 3rem;">Categories</h2>
+          <div class="categories">
+            <a href="#" class="category-tag">UI DESIGN</a>
+            <a href="#" class="category-tag">ACCESSIBILITY</a>
+            <a href="#" class="category-tag">DEVELOPMENT</a>
+            <a href="#" class="category-tag">RESEARCH</a>
+            <a href="#" class="category-tag">CASE STUDIES</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <!--
+    Footer Bar
+    - Contains copyright information
+    - Provides spacing above the mobile navigation
+    - Present across all pages for consistency
+  -->
+  <div class="footer-bar">
+    &copy; 2025 BLUE MARLIN OS &mdash; All rights reserved.
+  </div>
+  <script src="scripts.js"></script>
+</body>
+</html>

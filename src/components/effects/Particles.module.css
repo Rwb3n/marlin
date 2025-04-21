@@ -1,0 +1,67 @@
+/* Styles for Particles.tsx */
+
+/* Container for all particle elements */
+.particlesContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1; /* Matches light shafts, particles appear within them */
+}
+
+/* 
+  Base styling for individual particle elements.
+  - Absolutely positioned (actual position set via inline styles).
+  - Circular shape with a subtle glow effect.
+  - Uses the 'drift' animation.
+*/
+.particle {
+  position: absolute;
+  /* Using CSS variables defined in global styles/index.css for theme colors */
+  background-color: var(--color-particle);
+  border-radius: 50%;
+  opacity: 0.7;
+  box-shadow: 0 0 8px var(--color-particle-glow);
+  /* Base animation - duration and delay overridden by inline styles */
+  animation-name: drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* --- Keyframe Animation --- */
+
+/* 
+  Particle Floating Animation
+  - Simulates particles drifting upwards with slight horizontal movement.
+  - Includes fade-in and fade-out at the start and end.
+*/
+@keyframes drift {
+  0% {
+    transform: translateY(50px) translateX(0px); /* Start below viewport */
+    opacity: 0; /* Start invisible */
+  }
+  10% {
+    opacity: 0.6; /* Fade in quickly */
+  }
+  20% {
+    transform: translateY(-20px) translateX(-5px); /* Drift up and left */
+  }
+  40% {
+    transform: translateY(-40px) translateX(3px); /* Continue up, drift right */
+  }
+  60% {
+    transform: translateY(-60px) translateX(-2px); /* Continue up, drift left */
+  }
+  80% {
+    transform: translateY(-80px) translateX(4px); /* Continue up, drift right */
+  }
+  90% {
+    opacity: 0.6; /* Maintain visibility */
+  }
+  100% {
+    transform: translateY(-150px) translateX(0px); /* End above viewport */
+    opacity: 0; /* Fade out */
+  }
+} 

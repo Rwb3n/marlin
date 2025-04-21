@@ -1,0 +1,2123 @@
+/* =========================================================================
+   BLUE MARLIN OS - Main Stylesheet
+   
+   A dual-theme, underwater-inspired interface with day/night modes,
+   responsive design, and subtle animations.
+   
+   Note: The cloud-based day mode visuals have been removed, simplifying
+   the theme system to focus on the underwater night mode experience.
+   ========================================================================= */
+
+/* ------------------------------------------------------------------------- 
+   Reset & Base Styles
+   - Removes browser defaults
+   - Sets up box-sizing model
+   - Supports rendering consistency across browsers
+   ------------------------------------------------------------------------ */
+*, *::before, *::after {
+    box-sizing: border-box; /* Include padding and border in element width calculations */
+    margin: 0;              /* Remove default margins */
+    padding: 0;             /* Remove default padding */
+}
+  
+/* ------------------------------------------------------------------------- 
+   Color Themes & Variables
+   - Uses CSS custom properties for theming
+   - Organized into day ("origin") and night ("apex") color schemes
+   - All themed colors centralized for easy modifications
+   ------------------------------------------------------------------------ */
+:root {
+    /* Day Theme (phase-origin) 
+       Light, warm colors with orange accent */
+    --origin-bg: #fdfcfb;       /* Light cream background */
+    --origin-text: #0e0e0e;     /* Near-black text for contrast */
+    --origin-accent: #ff4400;   /* Vibrant orange accent */
+    --origin-accent-rgb: 255, 68, 0; /* RGB for rgba() */
+    --origin-water: #4a8fe7;    /* Light blue for water effects */
+    --origin-shafts: #ffffff;   /* White light shafts */
+    --origin-card-bg: rgba(253, 252, 251, 0.3); /* Translucent card background */
+    --origin-container-bg: rgba(253, 252, 251, 0.4); /* Slightly more opaque container */
+    --origin-header-bg: rgba(253, 252, 251, 0.8); /* Semi-opaque header */
+    --origin-muted: #757575;    /* Medium gray for secondary text */
+    
+    /* Night Theme (phase-apex)
+       Dark, cool colors with blue accent */
+    --apex-bg: #050c14;         /* Deep blue-black background */
+    --apex-text: #e6edf5;       /* Off-white text for readability */
+    --apex-accent: #0084ff;     /* Vibrant blue accent */
+    --apex-accent-rgb: 0, 132, 255; /* RGB for rgba() */
+    --apex-water: #0a2544;      /* Deep blue for water effect */
+    --apex-shafts: #0a4c9e;     /* Light blue for light shafts */
+    --apex-card-bg: rgba(15, 30, 50, 0.5); /* Translucent deep blue card */
+    --apex-container-bg: rgba(8, 20, 35, 0.7); /* Container background */
+    --apex-header-bg: rgba(5, 12, 20, 0.8); /* Semi-opaque header */
+    --apex-muted: #a3b3c9;      /* Light blue-gray for secondary text */
+    
+    /* Form validation colors */
+    --color-success: #00c853;   /* Green for valid states */
+    --color-danger: #ff3d00;    /* Red for error states */
+    --color-primary: var(--apex-accent); /* Default primary color */
+}
+  
+/* ------------------------------------------------------------------------- 
+   Typography Foundation
+   - Sets base font size and family
+   - Establishes hierarchy with headings
+   - Configures link and code styling
+   ------------------------------------------------------------------------ */
+html {
+    scroll-behavior: smooth;  /* Enable smooth scrolling for anchor links */
+    font-size: clamp(16px, 4vw, 24px); /* Responsive base font size */
+}
+  
+body {
+    /* Primary font stack with system font fallbacks */
+    font-family: 'Space Grotesk', 'Instrument Serif', Arial, sans-serif;
+    min-height: 100vh;       /* Ensure body is at least full viewport height */
+    background-color: var(--apex-bg);   /* Default night theme background */
+    color: var(--apex-text);            /* Default night theme text color */
+    transition: background-color 1s, color 1s; /* Smooth theme transitions */
+    position: relative;      /* Create positioning context for absolute elements */
+    overflow-x: hidden;      /* Prevent horizontal scrolling */
+    line-height: 1.6;        /* Improves readability for body text */
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+  
+/* Day theme: subtle blue/light cream gradient background inspired by a clear summer sky */
+html.phase-origin body {
+    /* Replace solid color with a soft vertical gradient */
+    background: linear-gradient(
+        to bottom,
+        #d4e6ff 0%,    /* Slightly darker sky blue at top for better contrast with white clouds */
+        #fdfcfb 90%,   /* Keep the light cream in middle */
+        #fffbe6 98%    /* Keep the light yellow/cream at bottom */
+    );
+    color: var(--origin-text);
+    /* Fallback for browsers that don't support gradients */
+    background-color: var(--origin-bg);
+}
+  
+/* Heading typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Special Gothic Expanded One', 'Space Grotesk', Arial, sans-serif;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+  
+/* Link styling - inherits surrounding text color by default */
+a {
+    color: inherit;
+    text-decoration: none;   /* Remove underlines from links */
+}
+  
+/* Code display styling */
+code {
+    font-family: monospace;  /* Monospace font for code */
+    background-color: rgba(0, 0, 0, 0.2); /* Subtle background for code in night mode */
+    padding: 0.2rem 0.4rem;  /* Padding for code blocks */
+    border-radius: 3px;      /* Rounded corners */
+    font-size: 0.9em;        /* Slightly smaller than body text */
+}
+  
+/* Adjusted code background for day mode */
+html.phase-origin code {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+  
+/* ------------------------------------------------------------------------- 
+   Underwater Environment Effects
+   - Creates immersive background with light shafts and particles
+   - Uses fixed positioning to create parallax-like effect
+   - All elements use pointer-events:none to avoid interfering with UI
+   ------------------------------------------------------------------------ */
+.underwater-environment {
+    position: fixed;         /* Fixed to viewport regardless of scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;    /* Allows clicks to pass through to elements below */
+    z-index: 0;              /* Positions behind content */
+    overflow: hidden;        /* Prevents scrollbars from animation overflow */
+}
+  
+/* ------------------------------------------------------------------------- 
+   Sky Environment
+   - Contains cloud elements for day mode (phase-origin)
+   - Occupies same visual space as underwater environment
+   - Separate DOM structure to avoid aria-hidden attributes
+   - Allows for theme-specific background elements
+   ------------------------------------------------------------------------ */
+/* Sky environment has been completely removed from the codebase.
+   Day mode (phase-origin) now uses a simple gradient background instead of clouds. */
+  
+/* Light shaft container */
+.light-shafts {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+  
+/* ------------------------------------------------------------------------- 
+   Theme-based Environment Visibility Control
+   - Uses display:none for complete element removal rather than opacity
+   - Ensures only appropriate atmospheric elements render per theme
+   - Prevents unnecessary animation processing for hidden elements
+   ------------------------------------------------------------------------ */
+/* Night mode (phase-apex): Shows underwater environment with light shafts */
+/* Day mode (phase-origin): Hides underwater effects */
+
+html.phase-origin .light-shafts {
+    display: none; /* Hide light shafts in day/origin mode */
+}
+
+html.phase-origin .underwater-environment {
+    display: none; /* Hide underwater in day/origin mode */
+}
+  
+/* Rule removed to ensure sky is always rendered for baseline visibility testing
+html.phase-apex .sky-environment {
+    display: none; 
+}
+*/
+
+/* ------------------------------------------------------------------------- 
+   Cloud Layer Container
+   - Serves as positioning context for individual clouds
+   - Occupies same space as the light-shafts in the alternative theme
+   - Uses same z-index (1) as light-shafts to maintain consistent depth
+   - Non-interactive layer that allows clickthrough to content below
+   - Added subtle animation to entire layer for enhanced movement effect
+   ------------------------------------------------------------------------ */
+/* Cloud layer has been completely removed to simplify the theme system.
+   Light shafts now handle all atmospheric effects in night mode. */
+  
+/* ------------------------------------------------------------------------- 
+   Light Shaft Styling
+   - Creates underwater light beam effect in night mode
+   - Positioned absolutely for full height coverage
+   - Uses gradients for soft light appearance
+   - Optimized for smooth animation
+   ------------------------------------------------------------------------ */
+  
+/* Individual light shaft styling */
+.light-shaft {
+    position: absolute;
+    top: 0;
+    width: 150px;            /* Default width, overridden for each shaft */
+    height: 100vh;           /* Full viewport height */
+    background: linear-gradient(to bottom, var(--apex-shafts), transparent); /* Fades to transparent */
+    opacity: 0.8;
+    filter: blur(40px);      /* Creates soft, diffused light effect */
+    transform-origin: top center; /* Sets pivot point for rotation */
+    will-change: transform, opacity; /* Optimizes animation performance */
+}
+
+/* Cloud styling has been removed */
+  
+/* Day theme light shaft adjustments */
+html.phase-origin .light-shaft {
+    background: linear-gradient(to bottom, var(--origin-shafts), transparent);
+    opacity: 0;            /* insivible */
+    filter: blur(5px);       /* Less blur for sharper rays in day mode */
+}
+  
+/* Individual light shaft positioning and animation
+   Each shaft has slightly different:
+   - Horizontal position (left)
+   - Width
+   - Angle (transform: rotate)
+   - Animation timing
+   This creates a natural, non-uniform appearance */
+.light-shaft:nth-child(1) {
+    left: 15%;
+    width: 120px;
+    transform: rotate(-4deg); /* Angled light shaft */
+    animation: shaftMove1 5s ease-in-out infinite, shaftGlow 15s ease-in-out infinite;
+}
+  
+.light-shaft:nth-child(2) {
+    left: 35%;
+    width: 180px;
+    transform: rotate(-5.5deg);
+    animation: shaftMove2 10s ease-in-out infinite, shaftGlow 18s ease-in-out infinite 2s; /* 2s delay */
+}
+  
+.light-shaft:nth-child(3) {
+    left: 60%;
+    width: 100px;
+    transform: rotate(-3deg);
+    animation: shaftMove3 12s ease-in-out infinite, shaftGlow 16s ease-in-out infinite 4s; /* 4s delay */
+}
+  
+.light-shaft:nth-child(4) {
+    left: 80%;
+    width: 140px;
+    transform: rotate(-6deg);
+    animation: shaftMove4 8s ease-in-out infinite, shaftGlow 20s ease-in-out infinite 6s; /* 6s delay */
+}
+
+/* ------------------------------------------------------------------------- 
+   Individual Cloud Positioning & Animation
+   - Clouds positioned in upper third of the viewport
+   - Strategic placement creates balanced, natural sky appearance:
+     * Varied heights (10-30% from top) create depth perception
+     * Distributed horizontally across viewport for full coverage
+     * Different sizes (300-500px width) suggest distance variation
+   - Each cloud combines two animations:
+     * Unique cloudDrift pattern for horizontal/vertical movement
+     * cloudPulse for subtle opacity/blur changes
+   - Longer animation durations (35-50s) create slow, peaceful motion
+   - Staggered animation delays prevent synchronized movement
+   ------------------------------------------------------------------------ */
+/* Cloud positioning and animations removed */
+  
+/* Day Mode (phase-origin) Cloud Enhancements
+   - Darkens cloud colors for better contrast against light sky background
+   - Reduces blur for sharper cloud definition
+   - Adds subtle border and stronger shadows for improved visibility
+   - Varies cloud appearances for more realistic sky atmosphere
+   ------------------------------------------------------------------------ */
+/* Cloud enhancements removed */
+
+/* Floating particles container */
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;    /* Allows clicks to pass through */
+    z-index: 1;
+}
+  
+/* Individual particle styling */
+.particle {
+    position: absolute;      /* Positioned randomly via JavaScript */
+    background-color: #fff;  /* White particle */
+    border-radius: 50%;      /* Circular shape */
+    opacity: 0.7;
+    box-shadow: 0 0 8px rgba(0, 132, 255, 0.8); /* Blue glow effect */
+    transition: box-shadow 1s, background-color 1s, opacity 1s; /* Smooth transition for theme changes */
+    
+    /* Default animation applied to all particles
+       Specific duration/delay set via JavaScript */
+    animation: drift 20s linear infinite;
+}
+  
+/* ------------------------------------------------------------------------- 
+   Day Mode (phase-origin) Particle Styling
+   - Gold/amber coloration simulates dust motes in sunlight
+   - Subtle orange glow matches the origin-accent theme color
+   - Adjusted animation properties create air-like vs water-like movement
+   - Smaller size and lower opacity maintain subtle atmospheric effect
+   - Transforms applied for more delicate appearance in daylight
+   ------------------------------------------------------------------------ */
+html.phase-origin .particle {
+    background-color: #ffb74d; /* Amber/gold for dust in sunlight effect */
+    box-shadow: 0 0 5px rgba(255, 68, 0, 0.4); /* Subtle orange glow using --origin-accent color */
+    opacity: 0.5; /* Slightly less opaque than night particles */
+    transform: scale(0.8); /* Slightly smaller particles for day mode */
+    animation-duration: 15s !important; /* 25% faster than underwater particles */
+    animation-timing-function: ease-out !important; /* Different easing for air vs water */
+}
+  
+/* Removes glow from particles in day mode */
+html.phase-origin .particle {
+    box-shadow: none;
+    display: none; /* Hide particles entirely in day mode */
+}
+  
+/* ------------------------------------------------------------------------- 
+   Header & Navigation
+   - Sticky header with glass-morphism effect
+   - Theme toggle control
+   - Responsive navigation (desktop/mobile)
+   ------------------------------------------------------------------------ */
+.header {
+    position: sticky;         /* Stays visible at top when scrolling */
+    top: 0;
+    z-index: 100;             /* Ensures header stays above other content */
+    background-color: var(--apex-header-bg);
+    backdrop-filter: blur(8px); /* Glass effect */
+    transition: background-color 0.5s;
+}
+  
+html.phase-origin .header {
+    background-color: var(--origin-header-bg);
+}
+  
+.header-top {
+    display: flex;            /* Horizontal layout */
+    justify-content: space-between; /* Logo on left, controls on right */
+    align-items: center;      /* Vertical centering */
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separator */
+}
+  
+html.phase-origin .header-top {
+    border-bottom: 1px solid rgba(14, 14, 14, 0.1); /* Darker border for day mode */
+}
+  
+/* Logo styling */
+.logo {
+    font-weight: bold;
+    font-size: 1.25rem;
+    letter-spacing: -0.5px;   /* Tighter letter spacing for logo */
+}
+  
+.logo span {
+    color: var(--apex-accent); /* Accent color for first part of logo */
+}
+  
+html.phase-origin .logo span {
+    color: var(--origin-accent);
+}
+  
+/* Header controls group (status display and theme toggle) */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;               /* Space between controls */
+}
+  
+/* Location/time display - hidden on mobile, shown in desktop */
+.location-time {
+    display: none;           /* Hidden by default on smaller screens */
+    align-items: center;
+    gap: 0.5rem;
+    font-family: monospace;  /* Technical font for data display */
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;   /* Pill shape */
+}
+  
+html.phase-origin .location-time {
+    border: 1px solid rgba(14, 14, 14, 0.2);
+}
+  
+/* Status indicator dot with pulse animation */
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: var(--apex-accent);
+    border-radius: 50%;      /* Circular shape */
+    animation: pulse 2s infinite; /* Pulsing effect */
+}
+  
+html.phase-origin .status-indicator {
+    background-color: var(--origin-accent);
+}
+  
+/* Theme toggle switch styling */
+.theme-toggle {
+    position: relative;      /* Positioning context for the knob */
+    width: 48px;
+    height: 24px;
+    background-color: var(--apex-accent);
+    border: none;
+    border-radius: 12px;     /* Rounded toggle switch */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+  
+html.phase-origin .theme-toggle {
+    background-color: var(--origin-accent);
+}
+  
+/* Toggle switch knob */
+.theme-toggle-knob {
+    position: absolute;
+    left: 26px;              /* Starting position for night mode (right side) */
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--apex-bg);
+    border-radius: 50%;      /* Circular knob */
+    display: flex;           /* Center the icon */
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s;   /* Smooth sliding animation */
+    color: var(--apex-text); /* Default icon color for night mode */
+}
+  
+html.phase-origin .theme-toggle-knob {
+    left: 2px;               /* Day mode position (left side) */
+    background-color: var(--origin-bg);
+    color: var(--origin-text); /* Icon color for day mode */
+}
+
+.theme-toggle-icon {
+    display: block;
+    font-size: 0.65rem;
+    transform: translateY(0px);
+    line-height: 1;
+}
+  
+/* Desktop navigation - hidden by default, shown in media query */
+.nav {
+    display: none;           /* Hidden on mobile */
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+  
+/* Main navigation links */
+.nav-links {
+    display: flex;
+    gap: 1.5rem;             /* Space between nav items */
+    list-style: none;        /* Remove bullets */
+    font-size: 0.875rem;
+    font-weight: 600;        /* Semi-bold navigation text */
+}
+  
+.nav-links a {
+    opacity: 0.8;            /* Slightly dimmed by default */
+    transition: opacity 0.2s;
+}
+  
+.nav-links a:hover {
+    opacity: 1;              /* Full opacity on hover */
+}
+  
+/* Active/current page indicator */
+.nav-links a.active {
+    color: var(--apex-accent);
+    opacity: 1;
+}
+  
+html.phase-origin .nav-links a.active {
+    color: var(--origin-accent);
+}
+  
+/* Mobile Navigation - fixed to bottom on small screens */
+.mobile-nav {
+    display: flex;           /* Horizontal layout */
+    position: fixed;         /* Fixed to viewport */
+    bottom: 0;               /* Attached to bottom edge */
+    left: 0;
+    width: 100%;
+    background-color: var(--apex-header-bg);
+    backdrop-filter: blur(8px); /* Glass effect */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 100;            /* Ensures navigation stays above content */
+}
+  
+html.phase-origin .mobile-nav {
+    background-color: var(--origin-header-bg);
+    border-top: 1px solid rgba(14, 14, 14, 0.1);
+}
+  
+/* Mobile navigation items */
+.mobile-nav a {
+    flex: 1;                 /* Equal width for all nav items */
+    text-align: center;      /* Centered text */
+    padding: 0.75rem 0;
+    font-size: 0.75rem;      /* Smaller text on mobile */
+    font-weight: 600;        /* Semi-bold */
+    transition: color 0.2s;
+}
+  
+/* Active/current page indicator on mobile */
+.mobile-nav a.active {
+    color: var(--apex-accent);
+}
+  
+html.phase-origin .mobile-nav a.active {
+    color: var(--origin-accent);
+}
+  
+/* ------------------------------------------------------------------------- 
+   Content Containers & Cards
+   - Glass-morphism effect with backdrop blur
+   - Consistent spacing and border radius
+   - Subtle animations and hover effects
+   ------------------------------------------------------------------------ */
+.content-container {
+    position: relative;       /* Create stacking context */
+    z-index: 10;              /* Position above underwater environment */
+    margin: 1rem;
+    padding: 1.5rem;
+    background-color: var(--apex-container-bg);
+    backdrop-filter: blur(10px); /* Glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+    border-radius: 0.5rem;    /* Rounded corners */
+    animation: floatIn 0.8s ease-out; /* Entrance animation */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Depth shadow */
+}
+  
+html.phase-origin .content-container {
+    background-color: var(--origin-container-bg);
+    border: 1px solid rgba(14, 14, 14, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Lighter shadow for day mode */
+}
+  
+/* ------------------------------------------------------------------------- 
+   Hero Section
+   - Main welcome area with large heading
+   - Accent color for emphasis
+   ------------------------------------------------------------------------ */
+.hero {
+    padding: 2rem 0;
+    text-align: center;       /* Centered content */
+}
+  
+.hero h1 {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    margin-bottom: 1rem;
+}
+  
+.hero h1 span {
+    display: block;           /* Stacked text layout */
+    color: var(--apex-accent); /* Accent color for emphasis */
+}
+  
+html.phase-origin .hero h1 span {
+    color: var(--origin-accent);
+}
+  
+.hero p {
+    opacity: 0.8;             /* Slightly muted description text */
+    max-width: 36rem;         /* Limit line length for readability */
+    margin: 0 auto 1.5rem;    /* Center horizontally */
+}
+  
+/* ------------------------------------------------------------------------- 
+   Project Cards & Grid
+   - Card-based display for projects
+   - Status indicators and IDs
+   - Responsive grid layout
+   ------------------------------------------------------------------------ */
+.project-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 2rem;                /* Space between project cards */
+}
+  
+/* Project image/preview container */
+.project-image {
+    position: relative;       /* Positioning context for badges */
+    aspect-ratio: 16/9;       /* Widescreen aspect ratio */
+    background-color: rgba(10, 37, 68, 0.3);
+    border-radius: 0.25rem;   /* Slightly rounded corners */
+    display: flex;            /* Center placeholder content */
+    align-items: center;
+    justify-content: center;
+    color: var(--apex-text);
+    opacity: 0.5;             /* Dimmed placeholder */
+}
+  
+html.phase-origin .project-image {
+    background-color: rgba(74, 143, 231, 0.3);
+    color: var(--origin-text);
+}
+  
+/* Project status badge */
+.project-status {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-family: monospace;   /* Technical font for status */
+    font-size: 0.75rem;
+    color: var(--apex-accent);
+}
+  
+html.phase-origin .project-status {
+    color: var(--origin-accent);
+}
+  
+/* Decorative line under status */
+.project-status::after {
+    content: "";              /* Generated content for decoration */
+    display: block;
+    width: 60px;
+    height: 2px;
+    background-color: var(--apex-accent);
+    margin-top: 0.25rem;
+    opacity: 0.6;             /* Semi-transparent line */
+}
+  
+html.phase-origin .project-status::after {
+    background-color: var(--origin-accent);
+}
+  
+/* Project ID badge */
+.project-id {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    font-family: monospace;   /* Technical font for IDs */
+    font-size: 0.75rem;
+    opacity: 0.6;             /* Muted appearance */
+}
+  
+/* Project description */
+.project-content h3 {
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    margin-bottom: 0.5rem;
+}
+  
+.project-content p {
+    margin-bottom: 1rem;
+    opacity: 0.8;             /* Slightly muted description */
+}
+  
+/* ------------------------------------------------------------------------- 
+   Feature Lists
+   - Custom bullet points using accent color
+   - Consistent spacing and alignment
+   ------------------------------------------------------------------------ */
+.feature-list {
+    margin-bottom: 1rem;
+}
+  
+.feature-item {
+    display: flex;            /* Horizontal layout */
+    align-items: flex-start;  /* Align bullet with first line of text */
+    gap: 0.5rem;              /* Space between bullet and text */
+    margin-bottom: 0.5rem;    /* Space between items */
+}
+  
+/* Custom bullet point */
+.feature-bullet {
+    width: 8px;
+    height: 8px;
+    background-color: var(--apex-accent);
+    border-radius: 50%;       /* Circular bullet */
+    margin-top: 0.5rem;       /* Align with text */
+}
+  
+html.phase-origin .feature-bullet {
+    background-color: var(--origin-accent);
+}
+  
+/* ------------------------------------------------------------------------- 
+   Call to Action Links
+   - Links with arrow indicators
+   - Animated arrow on hover
+   ------------------------------------------------------------------------ */
+.read-more {
+    /* Base styling */
+    display: inline-flex; /* Align icon and text nicely */
+    align-items: center;
+    gap: 0.4em; /* Space between text and icon */
+    font-family: 'Space Grotesk', Arial, sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
+    /* Default to Night Theme (phase-apex) */
+    color: var(--apex-accent);
+
+    /* Icon styling */
+    & svg {
+        width: 1em; /* Size relative to font size */
+        height: 1em;
+        stroke: var(--apex-accent); /* Match text color */
+        stroke-width: 2;
+        transition: transform 0.2s ease-in-out, stroke 0.2s ease-in-out;
+    }
+
+    /* Hover state - underline and slight icon movement */
+    &:hover {
+        color: color-mix(in srgb, var(--apex-accent) 80%, white);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+
+        & svg {
+            transform: translateX(3px); /* Move icon slightly right */
+            stroke: color-mix(in srgb, var(--apex-accent) 80%, white);
+        }
+    }
+
+    /* Active state - slightly dimmer */
+    &:active {
+        opacity: 0.7;
+    }
+
+    /* Focus state - clear outline */
+    &:focus-visible {
+        outline: 2px solid var(--apex-accent);
+        outline-offset: 3px;
+        border-radius: 2px; /* Slight radius for the outline shape */
+    }
+}
+
+/* Day Theme (phase-origin) Overrides for Action Link */
+html.phase-origin .read-more {
+    color: var(--origin-accent);
+
+    & svg {
+        stroke: var(--origin-accent);
+    }
+
+    &:hover {
+        color: color-mix(in srgb, var(--origin-accent) 80%, white);
+        & svg {
+            stroke: color-mix(in srgb, var(--origin-accent) 80%, white);
+        }
+    }
+
+    &:focus-visible {
+        outline-color: var(--origin-accent);
+    }
+}
+
+/* ------------------------------------------------------------------------- 
+   Journal/Blog Cards
+   - Card-based design for blog entries
+   - Date display and excerpt
+   - Scale animation on hover
+   ------------------------------------------------------------------------ */
+.journal-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 1rem;                /* Space between cards */
+    margin-bottom: 2rem;
+}
+  
+/* Individual journal/blog card */
+.journal-card {
+    background-color: var(--apex-card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.25rem;   /* Rounded corners */
+    padding: 1.5rem;
+    transition: transform 0.2s; /* Animation setup */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Depth shadow */
+}
+  
+html.phase-origin .journal-card {
+    background-color: var(--origin-card-bg);
+    border: 1px solid rgba(14, 14, 14, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow for day mode */
+}
+  
+/* Hover effect - slight scale up */
+.journal-card:hover {
+    transform: scale(1.02);   /* Grow slightly on hover */
+}
+  
+html.phase-origin .journal-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+}
+  
+/* Date display with monospace font */
+.journal-date {
+    font-family: monospace;   /* Technical font for dates */
+    font-size: 0.75rem;
+    color: var(--apex-accent);
+    margin-bottom: 0.5rem;
+}
+  
+html.phase-origin .journal-date {
+    color: var(--origin-accent);
+}
+  
+/* Card headline */
+.journal-card h3 {
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    margin-bottom: 0.75rem;
+}
+  
+/* Card excerpt with text truncation */
+.journal-card p {
+    opacity: 0.8;             /* Slightly muted text */
+    display: -webkit-box;     /* Enable text truncation */
+    -webkit-line-clamp: 3;    /* Limit to 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+  
+/* View all entries link container */
+.view-all {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+  
+/* Contact Section */
+.contact-section {
+    text-align: center;
+    max-width: 36rem;
+    margin: 0 auto;
+}
+  
+/* Journal Entry Layout */
+.journal-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+  
+/* Blog Post Content */
+.blog-header {
+    margin-bottom: 2rem;
+}
+  
+.blog-meta {
+    display: flex;
+    align-items: center;
+    font-family: monospace;
+    margin-bottom: 1rem;
+    color: var(--apex-accent);
+}
+  
+html.phase-origin .blog-meta {
+    color: var(--origin-accent);
+}
+  
+.blog-date {
+    display: inline-block;
+    padding-right: 1rem;
+    border-right: 1px solid currentColor;
+    margin-right: 1rem;
+}
+  
+.blog-tag {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+}
+  
+.blog-title {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+  
+.blog-content p, 
+.blog-content ul,
+.blog-content ol {
+    margin-bottom: 1.5rem;
+}
+  
+.blog-content h2 {
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--apex-accent);
+}
+  
+html.phase-origin .blog-content h2 {
+    color: var(--origin-accent);
+}
+  
+.blog-content h3 {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+  
+.blog-content ul,
+.blog-content ol {
+    padding-left: 1.5rem;
+}
+  
+.blog-content li {
+    margin-bottom: 0.5rem;
+}
+  
+.blog-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1rem 0 2rem;
+}
+  
+.blog-content pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+}
+  
+html.phase-origin .blog-content pre {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+  
+.blog-content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+  
+.blog-image {
+    position: relative;
+    aspect-ratio: 16/9;
+    background-color: rgba(10, 37, 68, 0.3);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+  
+html.phase-origin .blog-image {
+    background-color: rgba(74, 143, 231, 0.3);
+}
+  
+.blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+  
+/* Sidebar / Other Posts */
+.blog-sidebar {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+    margin-top: 2rem;
+}
+  
+html.phase-origin .blog-sidebar {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+  
+.sidebar-title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+  
+.entry-list {
+    list-style: none;
+}
+  
+.entry-list-item {
+    margin-bottom: 1.5rem;
+}
+  
+.entry-list-meta {
+    display: block;
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--apex-accent);
+    margin-bottom: 0.25rem;
+}
+  
+html.phase-origin .entry-list-meta {
+    color: var(--origin-accent);
+}
+  
+.entry-list-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    transition: color 0.2s;
+}
+  
+.entry-list-title:hover {
+    color: var(--apex-accent);
+}
+  
+html.phase-origin .entry-list-title:hover {
+    color: var(--origin-accent);
+}
+  
+.entry-list-excerpt {
+    font-size: 0.875rem;
+    opacity: 0.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+  
+/* Footer Navigation */
+.post-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+  
+html.phase-origin .post-navigation {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+  
+.post-nav-link {
+    max-width: 45%;
+}
+  
+.post-nav-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+    color: var(--apex-muted);
+}
+  
+html.phase-origin .post-nav-label {
+    color: var(--origin-muted);
+}
+  
+.post-nav-title {
+    font-weight: 600;
+    transition: color 0.2s;
+}
+  
+.post-nav-link:hover .post-nav-title {
+    color: var(--apex-accent);
+}
+  
+html.phase-origin .post-nav-link:hover .post-nav-title {
+    color: var(--origin-accent);
+}
+  
+.post-nav-previous .post-nav-title::before {
+    content: "← ";
+}
+  
+.post-nav-next {
+    text-align: right;
+}
+  
+.post-nav-next .post-nav-title::after {
+    content: " →";
+}
+  
+/* Typography */
+.text-accent {
+    color: var(--apex-accent);
+}
+  
+html.phase-origin .text-accent {
+    color: var(--origin-accent);
+}
+  
+.text-muted {
+    color: var(--apex-muted);
+}
+  
+html.phase-origin .text-muted {
+    color: var(--origin-muted);
+}
+  
+.monospace {
+    font-family: monospace;
+}
+  
+/* ------------------------------------------------------------------------- 
+   Animations & Keyframes
+   - Light shaft movements and glow effects
+   - Particle drift animation
+   - Interactive element animations (pulse, glow)
+   - Mouse interaction ripple effect
+   ------------------------------------------------------------------------ */
+
+/*
+  Light Shaft Movement Animations
+  Each shaft uses a slightly different keyframe to create a natural, non-uniform underwater effect.
+  - translateX: simulates horizontal drifting of the light ray
+  - rotate: simulates subtle angular changes as if refracted by water
+  - scaleX: simulates the shaft "breathing" (narrowing/widening) as it moves
+*/
+@keyframes shaftMove1 {
+    0%, 100% {
+        /* Start/end: centered, base angle, normal width */
+        transform: translateX(0) rotate(-4deg) scaleX(1);
+    }
+    33% {
+        /* Drift left, slightly more narrow, slightly more rotated */
+        transform: translateX(-20px) rotate(-4.5deg) scaleX(0.95);
+    }
+    66% {
+        /* Drift right, less rotated, slightly wider */
+        transform: translateX(20px) rotate(-3.5deg) scaleX(1.05);
+    }
+}
+
+@keyframes shaftMove2 {
+    0%, 100% {
+        /* Start/end: centered, base angle, normal width */
+        transform: translateX(0) rotate(-5.5deg) scaleX(1);
+    }
+    33% {
+        /* Drift right, maintain rotation, slightly wider */
+        transform: translateX(25px) rotate(-5deg) scaleX(1.05);
+    }
+    66% {
+        /* Drift left, more rotated, slightly more narrow */
+        transform: translateX(-25px) rotate(-6deg) scaleX(0.95);
+    }
+}
+
+@keyframes shaftMove3 {
+    0%, 100% {
+        /* Start/end: centered, base angle, normal width */
+        transform: translateX(0) rotate(-3deg) scaleX(1);
+    }
+    33% {
+        /* Drift left, more rotated, more narrow */
+        transform: translateX(-15px) rotate(-3.5deg) scaleX(0.9);
+    }
+    66% {
+        /* Drift right, less rotated, wider */
+        transform: translateX(15px) rotate(-2.5deg) scaleX(1.1);
+    }
+}
+
+@keyframes shaftMove4 {
+    0%, 100% {
+        /* Start/end: centered, base angle, normal width */
+        transform: translateX(0) rotate(-6deg) scaleX(1);
+    }
+    33% {
+        /* Drift left, more rotated, slightly more narrow */
+        transform: translateX(-20px) rotate(-6.5deg) scaleX(0.95);
+    }
+    66% {
+        /* Drift right, less rotated, slightly wider */
+        transform: translateX(20px) rotate(-5.5deg) scaleX(1.05);
+    }
+}
+
+/*
+  Light Shaft Glow Animation
+  - opacity: simulates the shaft "pulsing" in brightness as if affected by water movement
+  - filter: blur: simulates the shaft becoming more/less diffused
+*/
+@keyframes shaftGlow {
+    0%, 100% {
+        /* Dimmer and more diffused (less visible, more blended) */
+        opacity: 0.4;
+        filter: blur(20px);
+    }
+    50% {
+        /* Brighter and sharper (more visible, less blended) */
+        opacity: 0.7;
+        filter: blur(15px);
+    }
+}
+
+/* ------------------------------------------------------------------------- 
+   Cloud Movement Animations
+   - Each cloud has unique drift pattern with different:
+     * Direction and distance of horizontal movement (translateX)
+     * Subtle vertical movement to suggest air currents (translateY)
+     * Minimal size fluctuations for volume changes (scale)
+   - Uses 3-4 keyframes per animation (not just back-and-forth)
+   - Deliberately long durations (35-50s) create slow, gentle motion
+   - Multiple keyframe percentages create non-linear, curved paths
+   - Transform combinations create complex, organic movement patterns
+   - All clouds return to original position/size for seamless looping
+   ------------------------------------------------------------------------ */
+/* Cloud animations have been removed from the implementation
+   This includes:
+   - cloudDrift1, cloudDrift2, cloudDrift3, cloudDrift4 animations for movement
+   - cloudPulse animation for opacity/blur changes
+   
+   The animations section now only contains:
+   - Light shaft animations (shaftMove/shaftGlow)
+   - Particle animations (drift)
+   - UI element animations (pulse, floatIn, rippleEffect, etc.)
+*/
+
+/* ------------------------------------------------------------------------- 
+   Cloud Pulse Animation
+   - Separate animation from movement for independent control
+   - Creates subtle "breathing" effect for cloud density
+   - Combines two techniques for realistic atmospheric effect:
+     * Opacity changes simulate varying cloud density/thickness
+     * Blur adjustments suggest changing definition/focus
+   - Enhanced contrast between states for more noticeable effect
+   - Applied with different durations/delays to each cloud
+   ------------------------------------------------------------------------ */
+/* Cloud pulse animation has been removed as part of cloud styling simplification */
+
+/* Status indicator pulsing */
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; } /* Dim state */
+    50% { opacity: 1; }        /* Bright state */
+}
+  
+/* Content entrance animation */
+@keyframes floatIn {
+    0% { opacity: 0; transform: translateY(20px); }  /* Start invisible and below final position */
+    100% { opacity: 1; transform: translateY(0); }   /* Fade in and move up */
+}
+  
+/* Button glow effect (day mode) - Enhanced */
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 8px rgba(var(--origin-accent-rgb), 0.4), inset 0 0 3px rgba(255,255,255,0.2); } /* Base glow + inner highlight */
+    50% { box-shadow: 0 0 25px rgba(var(--origin-accent-rgb), 0.8), inset 0 0 8px rgba(255,255,255,0.4); }     /* Enhanced glow + inner */
+}
+  
+/* Button glow effect (night mode) - Enhanced */
+@keyframes pulseGlowApex {
+    /* Removed animation as requested by redesign */
+}
+  
+/* Particle floating animation with horizontal movement */
+@keyframes drift {
+    0% {
+        transform: translateY(50px) translateX(0px);  /* Start below and centered */
+        opacity: 0;                                  /* Start invisible */
+    }
+    10% {
+        opacity: 0.6;                               /* Fade in quickly */
+    }
+    20% {
+        transform: translateY(-20px) translateX(-5px); /* Drift up and left */
+    }
+    40% {
+        transform: translateY(-40px) translateX(3px);  /* Continue up, drift right */
+    }
+    60% {
+        transform: translateY(-60px) translateX(-2px); /* Continue up, drift left */
+    }
+    80% {
+        transform: translateY(-80px) translateX(4px);  /* Continue up, drift right */
+    }
+    90% {
+        opacity: 0.6;                               /* Maintain visibility */
+    }
+    100% {
+        transform: translateY(-150px) translateX(0px); /* End above and centered */
+        opacity: 0;                                   /* Fade out */
+    }
+}
+  
+/* Mouse interaction water ripple effect */
+@keyframes rippleEffect {
+    0% {
+        width: 0;                                   /* Start as a point */
+        height: 0;
+        opacity: 0.6;                               /* Semi-transparent */
+    }
+    100% {
+        width: 400px;                               /* Expand to large circle */
+        height: 400px;
+        opacity: 0.4;                                 /* Fade out completely */
+    }
+}
+  
+/* ------------------------------------------------------------------------- 
+   Responsive Design
+   - Mobile-first approach
+   - Multi-column layouts on larger screens
+   - Show/hide elements based on screen size
+   - Accessibility considerations
+   ------------------------------------------------------------------------ */
+@media (min-width: 768px) {
+    /* Show time display on desktop */
+    .location-time {
+        display: flex;                              /* Show on desktop */
+    }
+    
+    /* Desktop navigation */
+    .nav {
+        display: flex;                              /* Show desktop nav */
+    }
+    
+    /* Hide mobile navigation on desktop */
+    .mobile-nav {
+        display: none;                              /* Hide mobile nav */
+    }
+    
+    /* Larger hero heading on desktop */
+    .hero h1 {
+        font-size: 3rem;                            /* Larger headline */
+    }
+    
+    /* 2-column project grid on desktop */
+    .project-grid {
+        grid-template-columns: 1fr 1fr;             /* Two column layout */
+        align-items: center;                         /* Vertical centering */
+    }
+    
+    /* 2-column journal/blog grid on desktop */
+    .journal-grid {
+        grid-template-columns: 1fr 1fr;             /* Two column layout */
+    }
+    
+    /* Larger, centered content container on desktop */
+    .content-container {
+        margin: 1.5rem auto;                         /* Center horizontally */
+        max-width: 1200px;                           /* Limit width on large screens */
+        padding: 2rem;                               /* More spacious padding */
+    }
+    
+    /* Larger blog title on desktop */
+    .blog-title {
+        font-size: 2.5rem;                           /* Larger headline */
+    }
+}
+  
+/* Accessibility - respect reduced motion preference */
+@media (prefers-reduced-motion) {
+    * {
+        animation: none !important;                  /* Disable all animations */
+        transition: none !important;                 /* Disable all transitions */
+    }
+}
+  
+/* ------------------------------------------------------------------------- 
+   Mouse Interaction Effects
+   - Water ripple effect follows cursor
+   - Subtle, semi-transparent gradient 
+   - Creates underwater disturbance effect
+   ------------------------------------------------------------------------ */
+.water-ripple {
+    position: absolute;                              /* Position at cursor location */
+    pointer-events: none;                            /* Don't interfere with clicks */
+    border-radius: 50%;                              /* Circular shape */
+    background: radial-gradient(circle, rgba(10, 76, 158, 0.08) 0%, rgba(10, 76, 158, 0) 70%); /* Fade-out gradient */
+    transform: translate(-50%, -50%);                /* Center on cursor */
+    z-index: 5;                                      /* Above background, below content */
+    opacity: 0;                                      /* Start invisible (animated by JS) */
+}
+  
+html.phase-origin .water-ripple {
+    background: radial-gradient(circle, rgba(74, 143, 231, 0.08) 0%, rgba(74, 143, 231, 0) 70%); /* Day mode colors */
+}
+
+/* ------------------------------------------------------------------------- 
+   Form Elements
+   - Consistent styling for inputs, textareas, selects, and labels
+   - Subtle backgrounds, borders, and focus states
+   ------------------------------------------------------------------------ */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  border: 1.5px solid var(--apex-accent);
+  background: rgba(0,0,0,0.05);
+  color: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  font-family: inherit;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: rgba(230, 237, 245, 0.5);
+  font-size: 0.9rem;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--apex-accent);
+  box-shadow: 0 0 0 3px rgba(0,132,255,0.2);
+  outline: none;
+  background: rgba(0,0,0,0.1);
+}
+
+html.phase-origin .form-input,
+html.phase-origin .form-textarea,
+html.phase-origin .form-select {
+  border: 1.5px solid var(--origin-accent);
+  background: rgba(253,252,251,0.3);
+}
+
+html.phase-origin .form-input::placeholder,
+html.phase-origin .form-textarea::placeholder {
+  color: rgba(14, 14, 14, 0.4);
+}
+
+html.phase-origin .form-input:focus,
+html.phase-origin .form-textarea:focus,
+html.phase-origin .form-select:focus {
+  border-color: var(--origin-accent);
+  box-shadow: 0 0 0 3px rgba(255,68,0,0.15);
+  background: rgba(253,252,251,0.5);
+}
+
+/* Form validation states */
+.form-input.is-valid,
+.form-textarea.is-valid,
+.form-select.is-valid {
+  border-color: var(--color-success);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%232ecc71' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-input.is-invalid,
+.form-textarea.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--color-danger);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23e74c3c'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23e74c3c' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-select.is-valid,
+.form-select.is-invalid {
+  padding-right: 3rem;
+}
+
+.form-check-input.is-valid ~ .form-check-label,
+.form-check-input:checked ~ .form-check-label {
+  color: var(--color-success);
+}
+
+.form-check-input.is-invalid ~ .form-check-label {
+  color: var(--color-danger);
+}
+
+.form-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.form-feedback.valid {
+  color: var(--color-success);
+}
+
+.form-feedback.invalid {
+  color: var(--color-danger);
+}
+
+/* Form label animation */
+.form-label {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.label-active {
+  transform: translateY(-0.5rem) scale(0.85);
+  transform-origin: left top;
+  color: var(--color-primary);
+}
+
+/* Textarea specific */
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Improve select dropdown visibility in both themes */
+.form-select {
+  background-color: rgba(0,0,0,0.05);
+  color: inherit;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230084ff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.form-select option {
+  background: #122436;
+  color: #e6edf5;
+  padding: 0.5rem;
+}
+
+html.phase-origin .form-select {
+  background-color: rgba(253,252,251,0.8);
+  color: #0e0e0e;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ff4400' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+}
+
+html.phase-origin .form-select option {
+  background: #fdfcfb;
+  color: #0e0e0e;
+  padding: 0.5rem;
+}
+
+/* Checkbox and Radio styling */
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+  border: 1.5px solid var(--apex-accent);
+  background: rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.form-check-input:checked {
+  background-color: var(--apex-accent);
+  border-color: var(--apex-accent);
+}
+
+.form-check-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0,132,255,0.2);
+}
+
+.form-check-input[type="checkbox"] {
+  border-radius: 0.25rem;
+}
+
+.form-check-input[type="checkbox"]:checked:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0.2rem;
+  left: 0.4rem;
+  width: 0.4rem;
+  height: 0.7rem;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.form-check-input[type="radio"] {
+  border-radius: 50%;
+}
+
+.form-check-input[type="radio"]:checked:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: white;
+}
+
+.form-check-label {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+html.phase-origin .form-check-input {
+  border-color: var(--origin-accent);
+}
+
+html.phase-origin .form-check-input:checked {
+  background-color: var(--origin-accent);
+  border-color: var(--origin-accent);
+}
+
+html.phase-origin .form-check-input:focus {
+  box-shadow: 0 0 0 3px rgba(255,68,0,0.15);
+}
+
+/* Form Range input */
+.form-range {
+  width: 100%;
+  height: 0.5rem;
+  padding: 0;
+  background: transparent;
+  appearance: none;
+}
+
+.form-range:focus {
+  outline: none;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--apex-accent);
+  cursor: pointer;
+  margin-top: -0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.25rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.form-range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(0,132,255,0.2);
+}
+
+html.phase-origin .form-range::-webkit-slider-thumb {
+  background: var(--origin-accent);
+}
+
+html.phase-origin .form-range::-webkit-slider-runnable-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+html.phase-origin .form-range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(255,68,0,0.15);
+}
+
+/* Form Inline */
+.form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.form-inline .form-group {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-inline {
+    flex-direction: column;
+  }
+  
+  .form-inline .form-group {
+    width: 100%;
+  }
+}
+
+/* Footer Bar */
+.footer-bar {
+  width: 100%;
+  min-height: 56px;
+  background: var(--apex-header-bg);
+  color: var(--apex-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  opacity: 0.95;
+  z-index: 101;
+  position: relative;
+}
+html.phase-origin .footer-bar {
+  background: var(--origin-header-bg);
+  color: var(--origin-text);
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    margin-bottom: 4.5rem; /* Space for mobile nav/footer */
+  }
+  .footer-bar {
+    min-height: 64px;
+    font-size: 0.92rem;
+    z-index: 10 !important;
+    position: relative;
+  }
+  .mobile-nav {
+    z-index: 200 !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .project-grid .project-image {
+    max-width: 350px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 1.5rem;
+    align-self: start;
+  }
+}
+@media (max-width: 900px) {
+  .project-grid .project-image {
+    max-width: 320px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 1.5rem;
+    align-self: start;
+  }
+}
+@media (max-width: 768px) {
+  .project-image,
+  .project-grid .project-image {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 1.5rem auto;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  
+  .project-image > div {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 0.25rem;
+  }
+  
+  .project-status, .project-id {
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 0.25rem;
+  }
+
+  .project-grid .project-content,
+  .project-grid h3,
+  .project-grid p,
+  .project-grid .feature-list {
+    text-align: left;
+    width: 100%;
+    margin-bottom: 1.1rem;
+  }
+  
+  .project-grid .feature-list {
+    margin-bottom: 1.5rem;
+  }
+  
+  .project-grid h3 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.7rem;
+  }
+  
+  .project-grid p {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Two-column journal layout with sidebar */
+.journal-layout {
+  display: grid;
+  grid-template-columns: 1fr;        /* One column on small screens */
+  gap: 2rem;                        /* Space between columns */
+}
+
+@media (min-width: 960px) {        /* Change from 768px to 960px */
+  .journal-layout {
+    grid-template-columns: 2fr 1fr; /* Content takes 2/3, sidebar 1/3 */
+    gap: 3rem;                      /* More space between columns */
+  }
+  
+  /* Sidebar styling on desktop */
+  .blog-sidebar {
+    border-top: none;               /* Remove top border (mobile) */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* Add left border */
+    padding-top: 0;                 /* Remove top padding */
+    padding-left: 3rem;             /* Add left padding */
+    margin-top: 0;                  /* Remove top margin */
+  }
+  
+  /* Day mode styling for sidebar */
+  html.phase-origin .blog-sidebar {
+    border-top: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);   /* Day mode border */
+  }
+}
+
+/* =========================================================================
+   Button & Call-to-Action (CTA) Styles
+   - Defines primary, outline, and small button variations
+   - Ensures clear visual distinction and accessibility
+   - Provides consistent styling across themes (phase-apex/phase-origin)
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   Base Button Styles (Applied to .button and .button-outline)
+   - Common properties like display, padding, font, transitions, etc.
+   ------------------------------------------------------------------------ */
+.button,
+.button-outline {
+  /* Core styling */
+  display: inline-block;
+  padding: 0.85rem 1.7rem; /* Slightly increased padding */
+  font-family: 'Space Grotesk', Arial, sans-serif; /* Use Grotesk for buttons */
+  font-weight: 600; /* Bolder weight for distinction */
+  font-size: 0.9rem; /* Slightly smaller, adjust as needed */
+  text-transform: uppercase; /* Ensure consistent text case */
+  letter-spacing: 0.08em; /* Increase letter spacing slightly */
+  text-align: center;
+  text-decoration: none;
+  border-radius: 0.5rem; /* Changed: Target: 2x component-label radius (0.25rem * 2) */
+  border: 2px solid transparent; /* Reserve space for potential focus outline/border */
+  cursor: pointer;
+  user-select: none; /* Prevent text selection on buttons */
+
+  /* Smooth transitions for hover/focus states */
+  transition: background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out,
+              border-color 0.2s ease-in-out,
+              transform 0.15s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+
+  /* Basic 3D effect on press */
+  &:active {
+    transform: translateY(1px);
+    box-shadow: none; /* Remove shadow when pressed */
+  }
+
+  /* Accessibility: Clear focus state */
+  &:focus-visible {
+    outline: 2px solid var(--primary); /* Use accent color for outline */
+    outline-offset: 2px; /* Space outline away from button */
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Primary Button (.button) - High visual weight for main actions
+   ------------------------------------------------------------------------ */
+.button {
+  /* Default to Night Theme (phase-apex) */
+  background-color: var(--apex-accent);
+  color: #ffffff; /* Changed: Use white text for high contrast against accent bg */
+  border-color: var(--apex-accent); /* Match border to background */
+  box-shadow: 0 2px 5px rgba(var(--apex-accent-rgb), 0.3); /* Subtle glow/shadow */
+
+  /* Hover state - slightly lighter */
+  &:hover {
+    background-color: color-mix(in srgb, var(--apex-accent) 80%, white); /* Mix with white - slightly lighter */
+    border-color: color-mix(in srgb, var(--apex-accent) 80%, white);
+    color: #ffffff; /* Ensure text stays white on hover */
+    transform: translateY(-1px); /* Slight lift */
+    box-shadow: 0 4px 8px rgba(var(--apex-accent-rgb), 0.4); /* Enhanced shadow */
+  }
+
+  /* Active state adjustments */
+  &:active {
+    background-color: color-mix(in srgb, var(--apex-accent) 70%, black); /* Darker when pressed */
+    border-color: color-mix(in srgb, var(--apex-accent) 70%, black);
+    transform: translateY(1px); /* Consistent press effect */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2); /* Inner shadow */
+  }
+}
+
+/* Day Theme (phase-origin) Overrides for Primary Button */
+html.phase-origin .button {
+  background-color: var(--origin-accent);
+  color: var(--origin-bg); /* Use light background for text */
+  border-color: var(--origin-accent);
+  box-shadow: 0 2px 5px rgba(var(--origin-accent-rgb), 0.3);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--origin-accent) 80%, white);
+    border-color: color-mix(in srgb, var(--origin-accent) 80%, white);
+    color: var(--origin-bg);
+    box-shadow: 0 4px 8px rgba(var(--origin-accent-rgb), 0.4);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--origin-accent) 80%, black); /* Darker orange */
+    border-color: color-mix(in srgb, var(--origin-accent) 80%, black);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Ensure focus outline uses the correct accent color */
+  &:focus-visible {
+     outline-color: var(--origin-accent);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Outline Button (.button-outline) - Lower visual weight for secondary actions
+   ------------------------------------------------------------------------ */
+.button-outline {
+  /* Base styles inherited from .button */
+
+  /* Default to Night Theme (phase-apex) */
+  background-color: transparent;
+  color: var(--apex-accent);
+  border-color: var(--apex-accent);
+  box-shadow: none; /* No default shadow */
+
+  /* Hover state - subtle background fill */
+  &:hover {
+    background-color: rgba(var(--apex-accent-rgb), 0.15); /* Faint accent background - slightly more opaque */
+    color: var(--apex-accent);
+    border-color: var(--apex-accent);
+    transform: translateY(-1px); /* Slight lift */
+    box-shadow: 0 2px 4px rgba(var(--apex-accent-rgb), 0.15); /* Very subtle shadow */
+  }
+
+  /* Active state - slightly stronger background */
+  &:active {
+    background-color: rgba(var(--apex-accent-rgb), 0.2);
+    transform: translateY(1px); /* Consistent press effect */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+  }
+
+  /* Ensure focus outline uses the correct accent color */
+  &:focus-visible {
+     outline-color: var(--apex-accent);
+  }
+}
+
+/* Day Theme (phase-origin) Overrides for Outline Button */
+html.phase-origin .button-outline {
+  color: var(--origin-accent);
+  border-color: var(--origin-accent);
+
+  &:hover {
+    background-color: rgba(var(--origin-accent-rgb), 0.15);
+    color: var(--origin-accent);
+    border-color: var(--origin-accent);
+    box-shadow: 0 2px 4px rgba(var(--origin-accent-rgb), 0.15);
+  }
+
+  &:active {
+    background-color: rgba(var(--origin-accent-rgb), 0.2);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Ensure focus outline uses the correct accent color */
+  &:focus-visible {
+     outline-color: var(--origin-accent);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Small Button (.button-small) - Modifier for smaller size
+   - Reduces padding and font size for use in compact areas.
+   - Inherits styles from .button or .button-outline.
+   ------------------------------------------------------------------------ */
+.button-small {
+  padding: 0.5rem 1rem; /* Reduced padding */
+  font-size: 0.8rem; /* Smaller font */
+  letter-spacing: 0.06em; /* Slightly tighter spacing */
+}
+
+/* -------------------------------------------------------------------------
+   Action Link (.read-more) - Styled like a link, not a button
+   - Used for navigational actions like 'View More', 'Read More'.
+   - Emphasizes text + icon combination.
+   ------------------------------------------------------------------------ */
+.read-more {
+  /* Base styling */
+  display: inline-flex; /* Align icon and text nicely */
+  align-items: center;
+  gap: 0.4em; /* Space between text and icon */
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
+  /* Default to Night Theme (phase-apex) */
+  color: var(--apex-accent);
+
+  /* Icon styling */
+  & svg {
+    width: 1em; /* Size relative to font size */
+    height: 1em;
+    stroke: var(--apex-accent); /* Match text color */
+    stroke-width: 2;
+    transition: transform 0.2s ease-in-out, stroke 0.2s ease-in-out;
+  }
+
+  /* Hover state - underline and slight icon movement */
+  &:hover {
+    color: color-mix(in srgb, var(--apex-accent) 80%, white);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    & svg {
+      transform: translateX(3px); /* Move icon slightly right */
+      stroke: color-mix(in srgb, var(--apex-accent) 80%, white);
+    }
+  }
+
+  /* Active state - slightly dimmer */
+  &:active {
+    opacity: 0.7;
+  }
+
+  /* Focus state - clear outline */
+  &:focus-visible {
+    outline: 2px solid var(--apex-accent);
+    outline-offset: 3px;
+    border-radius: 2px; /* Slight radius for the outline shape */
+  }
+}
+
+/* Day Theme (phase-origin) Overrides for Action Link */
+html.phase-origin .read-more {
+  color: var(--origin-accent);
+
+  & svg {
+    stroke: var(--origin-accent);
+  }
+
+  &:hover {
+    color: color-mix(in srgb, var(--origin-accent) 80%, white);
+    & svg {
+      stroke: color-mix(in srgb, var(--origin-accent) 80%, white);
+    }
+  }
+
+  &:focus-visible {
+    outline-color: var(--origin-accent);
+  }
+}
+
+/* === END Button & CTA Styles === */
+
+/* Fix for project card image scaling */
+.card-image-container {
+    /* Ensure container clips overflowing content */
+    overflow: hidden;
+    position: relative; /* If needed for absolute positioning inside */
+    background-color: rgba(10, 37, 68, 0.3); /* Add placeholder bg just in case */
+}
+
+.card-image-container img {
+  display: block; /* Prevents extra space below image */
+  width: 100%;   /* Make image fill container width */
+  height: 100%;  /* Make image fill container height */
+  object-fit: cover; /* Cover area, maintain aspect ratio, may crop */
+  transition: transform 0.3s ease; /* Add transition for potential hover effect */
+}
+
+/* Optional: Slight zoom on card hover */
+.project-card:hover .card-image-container img {
+    transform: scale(1.05);
+}
+
+/* Cloud animations and classes removed */
+
+/* --- TEMPORARY TESTING STYLES REMOVED --- */
+
+/* ------------------------------------------------------------------------- 
+   Particle System
+   - Creates floating particles effect for underwater atmosphere
+   - Particles are randomly positioned via JavaScript
+   - Uses drift animation for gentle upward movement
+   - Particles are hidden in day mode for cleaner appearance
+   ------------------------------------------------------------------------ */

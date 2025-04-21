@@ -1,0 +1,17 @@
+<body>
+    <!-- SVG Filter Definitions -->
+    <svg style="position:absolute; height:0; width:0; overflow:hidden;" xmlns="http://www.w3.org/2000/svg" version="1.1">
+      <defs>
+        <filter id="water-surface">
+          <feTurbulence type="turbulence" baseFrequency="0.02 0.03" numOctaves="1" seed="2" result="turbulence">
+            <!-- Animate baseFrequency for subtle movement -->
+             <animate attributeName="baseFrequency" dur="10s" values="0.02 0.03;0.025 0.035;0.02 0.03" repeatCount="indefinite" />
+          </feTurbulence>
+          <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G" result="displacement"/>
+          <!-- Optional: Add subtle blur? <feGaussianBlur in="displacement" stdDeviation="0.5" /> -->
+        </filter>
+      </defs>
+    </svg>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body> 

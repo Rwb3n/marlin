@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" class="phase-apex">
+<head>
+  <!--
+    ========================================================================
+    BLUE MARLIN OS - UI Style Guide
+    ------------------------------------------------------------------------
+    - Demonstrates all core UI components, color themes, and layout systems
+    - Includes live component demos and code samples
+    - Uses dual theme system (night: phase-apex, day: phase-origin)
+    ========================================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Style Guide | BLUE MARLIN OS</title>
+  <!-- Preconnect for Google Fonts performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Instrument Serif for headings, loaded from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300..700&family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!--
+    Inline style block for style-guide-specific tweaks
+    (not part of main site styles)
+  -->
+  <style>
+    /* Style Guide Specific Styles */
+    .style-section {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    html.phase-origin .style-section {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .style-section:last-child {
+      border-bottom: none;
+    }
+    
+    .component-demo {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 0.5rem;
+    }
+    
+    html.phase-origin .component-demo {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .code-block {
+      margin: 1rem 0;
+      padding: 1rem;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    
+    html.phase-origin .code-block {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    
+    .color-swatch {
+      border-radius: 0.5rem;
+      height: 80px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: flex-end;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .swatch-label {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .typography-demo {
+      margin: 1.5rem 0;
+    }
+    
+    .sidebar-demo {
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding-left: 1.5rem;
+    }
+    
+    html.phase-origin .sidebar-demo {
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .component-label {
+      display: inline-block;
+      background-color: var(--apex-accent);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    html.phase-origin .component-label {
+      background-color: var(--origin-accent);
+    }
+    
+    .component-description {
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+    
+    /* Table of Contents */
+    .toc {
+      position: sticky;
+      top: 100px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+    
+    .toc ul {
+      list-style: none;
+    }
+    
+    .toc li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .toc a {
+      display: inline-block;
+      padding: 0.25rem 0;
+      transition: color 0.2s;
+    }
+    
+    .toc a:hover {
+      color: var(--apex-accent);
+    }
+    
+    html.phase-origin .toc a:hover {
+      color: var(--origin-accent);
+    }
+    
+    .toc .toc-h3 {
+      padding-left: 1rem;
+      font-size: 0.9em;
+    }
+    
+    .style-guide-layout {
+      display: block;
+    }
+    
+    @media (min-width: 768px) {
+      .style-guide-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 2rem;
+      }
+    }
+    /* --- FIX: TOC mobile stacking --- */
+    @media (max-width: 767px) {
+      .toc {
+        position: static !important;
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+        width: 100%;
+        margin-bottom: 2rem;
+        background: none;
+        box-shadow: none;
+      }
+    }
+
+    /* New style for button mimicking component-label */
+    .button-as-label:hover {
+       opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sky Environment Removed -->
+  
+  <!--
+    Underwater Environment
+    - Decorative background with light shafts and particles
+    - aria-hidden to hide from assistive tech
+  -->
+  <div class="underwater-environment" aria-hidden="true">
+    <div class="light-shafts">
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+      <div class="light-shaft"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+  
+  <!--
+    Header
+    - Contains logo, status, and theme toggle
+    - Uses .header and .header-top for layout
+  -->
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="logo">
+        <span>BLUE MARLIN</span> OS
+      </a>
+      <div class="header-controls">
+        <div class="location-time">
+          <div class="status-indicator"></div>
+          <span>DEPTH: 423M | 11:42:18</span>
+        </div>
+        <!-- Theme toggle button (moon/sun icon) -->
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch to day mode">
+          <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+        </button>
+      </div>
+    </div>
+    <!-- Desktop navigation -->
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="#">PROJECTS</a></li>
+        <li><a href="#">JOURNAL</a></li>
+        <li><a href="#" class="active">STYLEGUIDE</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- Mobile Navigation (fixed to bottom on small screens) -->
+  <nav class="mobile-nav">
+    <a href="index.html">HOME</a>
+    <a href="#">PROJECTS</a>
+    <a href="#" class="active">STYLEGUIDE</a>
+  </nav>
+  
+  <!--
+    Main Content
+    - Contains all style guide sections and demos
+    - Uses .content-container for glass-morphism effect
+  -->
+  <main>
+    <section class="content-container">
+      <div class="hero">
+        <h1>
+          <span>BLUE MARLIN OS</span>
+          UI Style Guide
+        </h1>
+        <p>
+          A comprehensive reference for all visual elements and components 
+          used in the BLUE MARLIN OS interface system.
+        </p>
+      </div>
+      <div class="style-guide-layout">
+        <!--
+          Table of Contents (sticky on desktop)
+          - Links to each major section
+        -->
+        <aside class="toc">
+          <h2>Contents</h2>
+          <ul>
+            <li><a href="#colors">Colors & Themes</a></li>
+            <li><a href="#typography">Typography</a></li>
+            <li><a href="#buttons">Buttons & CTAs</a></li>
+            <li><a href="#navigation">Navigation</a></li>
+            <li><a href="#cards">Cards & Containers</a></li>
+            <li><a href="#lists">Lists & Features</a></li>
+            <li><a href="#blog">Blog Components</a></li>
+            <li><a href="#effects">Visual Effects</a></li>
+            <li><a href="#layout">Layout Systems</a></li>
+          </ul>
+        </aside>
+        <div class="style-content">
+          <!--
+            Each section below demonstrates a core UI system/component
+            and includes a live demo and code sample
+          -->
+          <!-- Colors & Themes -->
+          <section id="colors" class="style-section">
+            <h2>Colors & Themes</h2>
+            <p class="component-description">
+              BLUE MARLIN OS uses a dual-theme system with phase-origin (day) and phase-apex (night) modes. 
+              Each theme has a dedicated color palette optimized for its context.
+            </p>
+            
+            <h3>Night Mode (phase-apex)</h3>
+            <div class="color-palette">
+              <div class="color-swatch" style="background-color: #050c14;">
+                <div class="swatch-label">Background</div>
+              </div>
+              <div class="color-swatch" style="background-color: #e6edf5;">
+                <div class="swatch-label">Text</div>
+              </div>
+              <div class="color-swatch" style="background-color: #0084ff;">
+                <div class="swatch-label">Accent</div>
+              </div>
+              <div class="color-swatch" style="background-color: #0a2544;">
+                <div class="swatch-label">Water</div>
+              </div>
+              <div class="color-swatch" style="background-color: #0a4c9e;">
+                <div class="swatch-label">Light Shafts</div>
+              </div>
+              <div class="color-swatch" style="background-color: rgba(15, 30, 50, 0.5);">
+                <div class="swatch-label">Card BG</div>
+              </div>
+              <div class="color-swatch" style="background-color: rgba(8, 20, 35, 0.7);">
+                <div class="swatch-label">Container</div>
+              </div>
+              <div class="color-swatch" style="background-color: #a3b3c9;">
+                <div class="swatch-label">Muted</div>
+              </div>
+            </div>
+            
+            <h3>Day Mode (phase-origin)</h3>
+            <div class="color-palette">
+              <div class="color-swatch" style="background-color: #fdfcfb;">
+                <div class="swatch-label">Background</div>
+              </div>
+              <div class="color-swatch" style="background-color: #0e0e0e;">
+                <div class="swatch-label">Text</div>
+              </div>
+              <div class="color-swatch" style="background-color: #ff4400;">
+                <div class="swatch-label">Accent</div>
+              </div>
+              <div class="color-swatch" style="background-color: #4a8fe7;">
+                <div class="swatch-label">Water</div>
+              </div>
+              <div class="color-swatch" style="background-color: #ffffff;">
+                <div class="swatch-label">Light Shafts</div>
+              </div>
+              <div class="color-swatch" style="background-color: rgba(253, 252, 251, 0.3);">
+                <div class="swatch-label">Card BG</div>
+              </div>
+              <div class="color-swatch" style="background-color: rgba(253, 252, 251, 0.4);">
+                <div class="swatch-label">Container</div>
+              </div>
+              <div class="color-swatch" style="background-color: #757575;">
+                <div class="swatch-label">Muted</div>
+              </div>
+            </div>
+            
+            <div class="component-demo">
+              <span class="component-label">Theme Toggle</span>
+              <button class="theme-toggle" aria-label="Switch to day mode">
+                <div class="theme-toggle-knob"><span class="theme-toggle-icon">☾</span></div>
+              </button>
+            </div>
+            
+            <div class="code-block">
+// CSS Variables for Theme Colors
+:root {
+  /* Day Theme (phase-origin) */
+  --origin-bg: #fdfcfb;
+  --origin-text: #0e0e0e;
+  --origin-accent: #ff4400;
+  /* ... other variables ... */
+  
+  /* Night Theme (phase-apex) */
+  --apex-bg: #050c14;
+  --apex-text: #e6edf5;
+  --apex-accent: #0084ff;
+  /* ... other variables ... */
+}
+            </div>
+          </section>
+          
+          <!-- Typography -->
+          <section id="typography" class="style-section">
+            <h2>Typography</h2>
+            <p class="component-description">
+              The type system uses system fonts for optimal performance and native feel,
+              with monospace accents for data displays and technical information.
+            </p>
+            
+            <div class="typography-demo">
+              <h1 style="margin-bottom: 1.5rem;">Heading 1 (Hero Title)</h1>
+              <h2 style="margin-bottom: 1.5rem;">Heading 2 (Section Title)</h2>
+              <h3 style="margin-bottom: 1.5rem;">Heading 3 (Card Title)</h3>
+              <h4 style="margin-bottom: 1.5rem;">Heading 4 (Subsection Title)</h4>
+              <p style="margin-bottom: 1.5rem;">Body text used for main content. Optimized for readability with appropriate line height and character spacing. The interface uses system fonts for performance and native feel on all devices.</p>
+              <p class="text-muted" style="margin-bottom: 1.5rem;">Muted text used for secondary information and less important content.</p>
+              <p class="text-accent" style="margin-bottom: 1.5rem;">Accent text used for highlighting important information.</p>
+              <p class="monospace" style="margin-bottom: 1.5rem;">Monospace font used for data displays, timestamps, and technical information.</p>
+              <p><code>Inline code styling for technical references.</code></p>
+            </div>
+            
+            <div class="code-block">
+// Base Typography
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+               Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+// Monospace for technical data
+.monospace {
+  font-family: monospace;
+}
+            </div>
+          </section>
+          
+          <!-- Buttons & CTAs -->
+          <section id="buttons" class="style-section">
+            <h2>Buttons & CTAs</h2>
+            <p class="component-description">
+              Buttons provide clear calls to action, visually distinct from surrounding text.
+              Primary buttons have high visual weight. Outline buttons offer secondary actions.
+              Action Links (like 'Read More') are styled distinctly as enhanced text links for navigation.
+            </p>
+            
+            <div class="component-demo">
+              <!-- Primary Button Example -->
+              <span class="component-label">Primary Button</span>
+              <p>Used for the most important action on a page.</p>
+              <a href="#" class="button">PRIMARY ACTION</a>
+              <br><br>
+
+              <!-- Outline Button Example -->
+              <span class="component-label">Outline Button</span>
+              <p>Used for secondary actions.</p>
+              <a href="#" class="button-outline">SECONDARY ACTION</a>
+              <br><br>
+
+              <!-- Small Button Example (Primary Style) -->
+              <span class="component-label">Small Button (Primary)</span>
+              <p>Compact version for limited space.</p>
+              <a href="#" class="button button-small">SMALL ACTION</a>
+              <br><br>
+              
+              <!-- Small Button Example (Outline Style) -->
+              <span class="component-label">Small Button (Outline)</span>
+              <p>Compact version for limited space.</p>
+              <a href="#" class="button-outline button-small">SMALL ACTION</a>
+              <br><br>
+
+              <!-- Action Link Example -->
+              <span class="component-label">Action Link</span>
+              <p>Styled as an enhanced link for navigation, not a button.</p>
+              <a href="#" class="read-more">
+                VIEW MORE
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+            
+            <div class="code-block">
+<pre><code>// Base Button Styles (.button, .button-outline)
+.button,
+.button-outline {
+  display: inline-block;
+  padding: 0.85rem 1.7rem;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  border-radius: 0.5rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease-in-out; /* Simplified transition */
+}
+
+// Primary Button (.button)
+.button {
+  background-color: var(--primary); /* Using --primary for theme adapt */
+  color: #ffffff; /* Use white or very light color for high contrast */
+  border-color: var(--primary);
+  box-shadow: 0 2px 5px rgba(var(--primary-rgb), 0.3);
+}
+
+.button:hover {
+  background-color: color-mix(in srgb, var(--primary) 85%, white);
+  border-color: color-mix(in srgb, var(--primary) 85%, white);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(var(--primary-rgb), 0.4);
+}
+
+// Outline Button (.button-outline)
+.button-outline {
+  background-color: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.button-outline:hover {
+  background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+// Small Button Modifier (.button-small)
+.button-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+// Action Link (.read-more)
+.read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.read-more:hover {
+  color: color-mix(in srgb, var(--primary) 85%, white);
+  text-decoration: underline;
+}
+
+.read-more svg {
+  width: 1em;
+  height: 1em;
+  stroke: currentColor; /* Inherit color from text */
+  transition: transform 0.2s ease-in-out;
+}
+
+.read-more:hover svg {
+  transform: translateX(3px);
+}
+
+/* Note: Assumes --primary, --primary-rgb, and --bg variables are correctly 
+   set for both phase-apex and phase-origin themes. 
+   Focus and active states omitted for brevity. */
+</code></pre>
+            </div>
+          </section>
+          
+          <!-- Navigation -->
+          <section id="navigation" class="style-section">
+            <h2>Navigation</h2>
+            <p class="component-description">
+              The navigation system is responsive, with a top navigation bar on desktop and 
+              bottom navigation on mobile devices. The logo serves as a home link.
+            </p>
+            
+            <div class="component-demo">
+              <span class="component-label">Desktop Navigation</span>
+              <nav class="nav" style="display: flex; background-color: var(--apex-header-bg);">
+                <ul class="nav-links">
+                  <li><a href="#">PROJECTS</a></li>
+                  <li><a href="#">JOURNAL</a></li>
+                  <li><a href="#" class="active">STYLEGUIDE</a></li>
+                  <li><a href="#">CONTACT</a></li>
+                </ul>
+              </nav>
+              
+              <br><br>
+              
+              <span class="component-label">Mobile Navigation</span>
+              <nav class="mobile-nav" style="position: static; width: 100%;">
+                <a href="#">HOME</a>
+                <a href="#">PROJECTS</a>
+                <a href="#" class="active">JOURNAL</a>
+              </nav>
+            </div>
+            
+            <div class="code-block">
+// Desktop Navigation
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+// Mobile Navigation - Fixed at Bottom
+.mobile-nav {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+            </div>
+          </section>
+          
+          <!-- Cards & Containers -->
+          <section id="cards" class="style-section">
+            <h2>Cards & Containers</h2>
+            <p class="component-description">
+              Content is organized into container blocks with subtle backdrop blur effects
+              and appropriate shadows. Cards are used for collections of content.
+            </p>
+            
+            <div class="component-demo">
+              <span class="component-label">Content Container</span>
+              <div class="content-container" style="margin: 0; background-color: var(--apex-container-bg); backdrop-filter: blur(10px);">
+                <p>Standard content container with backdrop blur and subtle border</p>
+              </div>
+              
+              <br>
+              
+              <span class="component-label">Journal Card</span>
+              <div class="journal-card">
+                <div class="journal-date">04.12.2025</div>
+                <h3>Card Title Example</h3>
+                <p>
+                  This is an example of a journal or blog card with a title, date, and excerpt.
+                  Cards include hover effects and appropriate spacing.
+                </p>
+                <a href="#" class="read-more">
+                  READ MORE
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </a>
+              </div>
+              
+              <br>
+              
+              <span class="component-label">Project Image Card</span>
+              <div class="project-image" style="width: 100%; max-width: 400px; margin: 0 auto;">
+                <div>Project Preview</div>
+                <div class="project-status">STATUS: ACTIVE</div>
+                <div class="project-id">PROJECT ID: 00-542-A</div>
+              </div>
+              
+              <br><br>
+
+              <!-- Added Project Card Demo -->
+              <span class="component-label">Project Card</span>
+              <a href="#" class="project-card" style="display: block; max-width: 400px; margin: 0 auto;">
+                <div class="card-image-container">
+                  <img src="paceholder_3-2.png" alt="Project Card Placeholder Image">
+                </div>
+                <div class="card-content">
+                  <h3 class="card-title">Project Card Title</h3>
+                  <p class="card-desc">
+                    This card shows a project with an image, title, description, and link.
+                  </p>
+                  <span class="view-project">View Project →</span>
+                </div>
+              </a>
+            </div>
+            
+            <div class="code-block">
+// Content Container
+.content-container {
+  background-color: var(--apex-container-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+// Journal Card
+.journal-card {
+  background-color: var(--apex-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.25rem;
+  transition: transform 0.2s;
+}
+
+.journal-card:hover {
+  transform: scale(1.02);
+}
+            </div>
+          </section>
+          
+          <!-- Lists & Features -->
+          <section id="lists" class="style-section">
+            <h2>Lists & Features</h2>
+            <p class="component-description">
+              Feature lists use custom bullet styling with the accent color.
+              Standard lists are styled for readability with appropriate spacing.
+            </p>
+            
+            <div class="component-demo">
+              <span class="component-label">Feature List</span>
+              <div class="feature-list">
+                <div class="feature-item">
+                  <div class="feature-bullet"></div>
+                  <div>Custom feature item with accent bullet</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-bullet"></div>
+                  <div>Second feature item example</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-bullet"></div>
+                  <div>Third feature item example</div>
+                </div>
+              </div>
+              
+              <br>
+              
+              <span class="component-label">Standard List</span>
+              <ul style="padding-left: 1.5rem;">
+                <li style="margin-bottom: 0.5rem;">Standard bulleted list item</li>
+                <li style="margin-bottom: 0.5rem;">Second standard list item</li>
+                <li>Third standard list item</li>
+              </ul>
+            </div>
+            
+            <div class="code-block">
+// Feature List
+.feature-list {
+  margin-bottom: 1rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-bullet {
+  width: 8px;
+  height: 8px;
+  background-color: var(--apex-accent);
+  border-radius: 50%;
+  margin-top: 0.5rem;
+}
+            </div>
+          </section>
+          
+          <!-- Form Elements -->
+          <section id="forms" class="style-section">
+            <h2>Form Elements</h2>
+            <p class="component-description">
+              Form elements are styled for clarity, accessibility, and consistency with the design system.
+              Includes custom styling for inputs, textareas, selects, checkboxes, radio buttons, and validation states.
+            </p>
+            <div class="component-demo">
+              <form style="max-width: 500px; margin: 0 auto;">
+                <!-- Text Input -->
+                <span class="component-label">Text Input</span>
+                <div class="form-group">
+                  <label for="input1" class="form-label">Text Input</label>
+                  <input id="input1" type="text" class="form-input" placeholder="Enter text..." />
+                </div>
+                
+                <!-- Text Input with Validation -->
+                <span class="component-label">Validation States</span>
+                <div class="form-group">
+                  <label for="input-valid" class="form-label">Valid Input</label>
+                  <input id="input-valid" type="text" class="form-input is-valid" value="Correct value" />
+                  <div class="form-feedback valid">Looks good!</div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="input-invalid" class="form-label">Invalid Input</label>
+                  <input id="input-invalid" type="text" class="form-input is-invalid" value="Incorrect value" />
+                  <div class="form-feedback invalid">Please check this field.</div>
+                </div>
+                
+                <!-- Textarea -->
+                <span class="component-label">Textarea</span>
+                <div class="form-group">
+                  <label for="textarea1" class="form-label">Message</label>
+                  <textarea id="textarea1" class="form-textarea" rows="3" placeholder="Type your message..."></textarea>
+                </div>
+                
+                <!-- Select Dropdown -->
+                <span class="component-label">Select Dropdown</span>
+                <div class="form-group">
+                  <label for="select1" class="form-label">Select Option</label>
+                  <select id="select1" class="form-select">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                  </select>
+                </div>
+                
+                <!-- Checkboxes -->
+                <span class="component-label">Checkboxes</span>
+                <div class="form-group">
+                  <div class="form-check">
+                    <input type="checkbox" id="check1" class="form-check-input" />
+                    <label for="check1" class="form-check-label">Option One</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" id="check2" class="form-check-input" checked />
+                    <label for="check2" class="form-check-label">Option Two (checked)</label>
+                  </div>
+                </div>
+                
+                <!-- Radio Buttons -->
+                <span class="component-label">Radio Buttons</span>
+                <div class="form-group">
+                  <div class="form-check">
+                    <input type="radio" id="radio1" name="radioGroup" class="form-check-input" checked />
+                    <label for="radio1" class="form-check-label">First option (selected)</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" id="radio2" name="radioGroup" class="form-check-input" />
+                    <label for="radio2" class="form-check-label">Second option</label>
+                  </div>
+                </div>
+                
+                <!-- Range Slider -->
+                <span class="component-label">Range Slider</span>
+                <div class="form-group">
+                  <label for="range1" class="form-label">Depth Control</label>
+                  <input type="range" id="range1" class="form-range" min="0" max="100" value="65" />
+                </div>
+                
+                <!-- Inline Form -->
+                <span class="component-label">Inline Form Layout</span>
+                <div class="form-inline">
+                  <div class="form-group">
+                    <label for="inline1" class="form-label">First Name</label>
+                    <input id="inline1" type="text" class="form-input" placeholder="First name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="inline2" class="form-label">Last Name</label>
+                    <input id="inline2" type="text" class="form-input" placeholder="Last name" />
+                  </div>
+                  <button type="submit" class="button button-small">Submit</button>
+                </div>
+              </form>
+            </div>
+            <div class="code-block">
+// Form Elements
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  border: 1.5px solid var(--apex-accent);
+  background: rgba(0,0,0,0.05);
+  color: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--apex-accent);
+  box-shadow: 0 0 0 3px rgba(0,132,255,0.2);
+  outline: none;
+}
+
+// Checkbox and Radio styling
+.form-check-input {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+  border: 1.5px solid var(--apex-accent);
+  background: rgba(0,0,0,0.05);
+  cursor: pointer;
+  position: relative;
+}
+
+.form-check-input:checked {
+  background-color: var(--apex-accent);
+}
+
+// Validation states
+.form-input.is-valid {
+  border-color: #00c853;
+}
+
+.form-input.is-invalid {
+  border-color: #ff3d00;
+}
+            </div>
+          </section>
+          
+          <!-- Visual Effects -->
+          <section id="effects" class="style-section">
+            <h2>Visual Effects</h2>
+            <p class="component-description">
+              The underwater theme is reinforced with subtle animations, light shafts,
+              and floating particles that respond to the current theme.
+            </p>
+            <div class="component-demo" style="height: 220px; position: relative; overflow: hidden; border-radius: 0.5rem;">
+              <!-- Live preview of the real underwater effect -->
+              <div class="underwater-environment" style="position: absolute; inset: 0; z-index: 0;">
+                <div class="light-shafts">
+                  <div class="light-shaft"></div>
+                  <div class="light-shaft"></div>
+                  <div class="light-shaft"></div>
+                  <div class="light-shaft"></div>
+                </div>
+                <div class="particles" id="particles-demo"></div>
+              </div>
+              <div style="position: absolute; bottom: 0.5rem; right: 1rem; z-index: 2; font-size: 0.85rem; color: var(--apex-muted); background: rgba(0,0,0,0.2); padding: 0.25rem 0.75rem; border-radius: 0.25rem;">Live preview of the real effect</div>
+            </div>
+            <br>
+            <span class="component-label">Hover Scale Effect</span>
+            <div class="journal-card" style="width: 100%; max-width: 300px; margin: 0 auto;">
+              <h3>Hover Scale Demo</h3>
+              <p>This card scales slightly on hover to indicate interactivity.</p>
+            </div>
+            <div class="code-block">
+// Animations
+@keyframes waterWave {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.02) translateY(-5px); }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(100%); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(-100%); opacity: 0; }
+}
+
+// Hover Effect
+.journal-card:hover {
+  transform: scale(1.02);
+}
+            </div>
+          </section>
+          
+          <!-- Blog Components -->
+          <section id="blog" class="style-section">
+            <h2>Blog Components</h2>
+            <p class="component-description">
+              Blog pages include specialized components for article display,
+              metadata, tags, and navigation between posts.
+            </p>
+            
+            <div class="component-demo">
+              <span class="component-label">Blog Post Header</span>
+              <div class="blog-meta">
+                <span class="blog-date">04.12.2025</span>
+                <span class="blog-tag">RENDERING</span>
+                <span class="blog-tag">OPTIMIZATION</span>
+              </div>
+              <h1 style="font-size: 2rem; margin-bottom: 1rem;">Blog Post Title Example</h1>
+              
+              <br>
+              
+              <span class="component-label">Post Navigation</span>
+              <nav class="post-navigation">
+                <div class="post-nav-previous post-nav-link">
+                  <span class="post-nav-label">Previous</span>
+                  <span class="post-nav-title">Previous Post Title</span>
+                </div>
+                
+                <div class="post-nav-next post-nav-link">
+                  <span class="post-nav-label">Next</span>
+                  <span class="post-nav-title">Next Post Title</span>
+                </div>
+              </nav>
+              
+              <br>
+              
+              <span class="component-label">Sidebar Entry List</span>
+              <div class="sidebar-demo">
+                <ul class="entry-list" style="list-style: none;">
+                  <li class="entry-list-item">
+                    <a href="#">
+                      <span class="entry-list-meta">04.10.2025</span>
+                      <h3 class="entry-list-title">Related Entry Example</h3>
+                      <p class="entry-list-excerpt">
+                        Short excerpt of the related blog post that gives context and encourages clicking.
+                      </p>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="code-block">
+// Blog Meta Components
+.blog-meta {
+  display: flex;
+  align-items: center;
+  font-family: monospace;
+  color: var(--apex-accent);
+}
+
+.blog-tag {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+// Post Navigation
+.post-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+            </div>
+          </section>
+          
+          <!-- Layout Systems -->
+          <section id="layout" class="style-section">
+            <h2>Layout Systems</h2>
+            <p class="component-description">
+              The layout system is responsive and adapts to different screen sizes.
+              Grid layouts are used for collections, and content is appropriately spaced.
+            </p>
+            
+            <div class="component-demo">
+              <span class="component-label">Content Grid (Journal Cards)</span>
+              <div class="journal-grid" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+                <div class="journal-card">
+                  <div class="journal-date">04.12.2025</div>
+                  <h3>Grid Item 1</h3>
+                  <p>Example of a grid layout item with responsive behavior.</p>
+                </div>
+                <div class="journal-card">
+                  <div class="journal-date">04.05.2025</div>
+                  <h3>Grid Item 2</h3>
+                  <p>Example of a grid layout item with responsive behavior.</p>
+                </div>
+                <div class="journal-card">
+                  <div class="journal-date">03.28.2025</div>
+                  <h3>Grid Item 3</h3>
+                  <p>Example of a grid layout item with responsive behavior.</p>
+                </div>
+              </div>
+              
+              <br>
+              
+              <span class="component-label">Two-Column Layout</span>
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <div style="background-color: rgba(0,0,0,0.2); padding: 1rem; border-radius: 0.5rem;">
+                  <p>Main content area (2/3 width)</p>
+                </div>
+                <div style="background-color: rgba(0,0,0,0.2); padding: 1rem; border-radius: 0.5rem;">
+                  <p>Sidebar area (1/3 width)</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="code-block">
+// Grid Layouts
+.journal-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .journal-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .project-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .blog-layout {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <script src="scripts.js"></script>
+  
+  <!--
+    Style Guide Specific JavaScript
+    - Handles TOC highlighting and demo theme toggles
+  -->
+  <script>
+    // Highlight active section in TOC based on scroll position
+    (function setupTOC() {
+      const sections = document.querySelectorAll('.style-section');
+      const tocLinks = document.querySelectorAll('.toc a');
+      
+      function highlightActiveTOCLink() {
+        let currentSection = '';
+        
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          if (window.scrollY >= sectionTop - 100 && window.scrollY < sectionTop + sectionHeight - 100) {
+            currentSection = section.getAttribute('id');
+          }
+        });
+        
+        tocLinks.forEach(link => {
+          link.style.fontWeight = 'normal';
+          link.style.color = '';
+          
+          if (link.getAttribute('href').slice(1) === currentSection) {
+            link.style.fontWeight = 'bold';
+            link.style.color = window.getComputedStyle(document.documentElement).getPropertyValue('--apex-accent');
+            
+            if (document.documentElement.classList.contains('phase-origin')) {
+              link.style.color = window.getComputedStyle(document.documentElement).getPropertyValue('--origin-accent');
+            }
+          }
+        });
+      }
+      
+      window.addEventListener('scroll', highlightActiveTOCLink);
+      highlightActiveTOCLink(); // Initial call
+    })();
+    
+    // Make component example toggles interactive
+    document.querySelectorAll('.component-demo .theme-toggle').forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const knob = this.querySelector('.theme-toggle-knob');
+        const isActive = knob.style.left === '26px' || window.getComputedStyle(knob).left === '26px';
+        
+        if (isActive) {
+          knob.style.left = '2px';
+          knob.innerHTML = '☀';
+        } else {
+          knob.style.left = '26px';
+          knob.innerHTML = '☾';
+        }
+        
+        // Update demo toggle button colors
+        if (document.documentElement.classList.contains('phase-origin')) {
+          this.style.backgroundColor = 'var(--origin-accent)';
+          knob.style.backgroundColor = 'var(--origin-bg)';
+          knob.style.color = 'var(--origin-text)';
+        } else {
+          this.style.backgroundColor = 'var(--apex-accent)';
+          knob.style.backgroundColor = 'var(--apex-bg)';
+          knob.style.color = 'var(--apex-text)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
