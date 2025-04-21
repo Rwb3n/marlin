@@ -15,9 +15,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo&family=Instrument+Serif:ital@0;1&family=Prosto+One&display=swap" rel="stylesheet">
     
     <title>Vite + React</title>
+
+    <!-- Preloader CSS -->
+    <style>
+      #preloader {
+        position: fixed;
+        inset: 0; /* Equivalent to top, bottom, left, right = 0 */
+        background-color: rgba(20, 20, 30, 0.1); /* Semi-transparent dark background */
+        backdrop-filter: blur(8px); /* Glassmorphism effect */
+        -webkit-backdrop-filter: blur(8px); /* Safari support */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999; /* Ensure it's on top */
+        opacity: 1;
+        transition: opacity 0.5s ease-out; /* Fade-out transition */
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3); /* Light border */
+        border-top-color: #ffffff; /* White top border for spin effect */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Rule to hide the preloader */
+      body.app-loaded #preloader {
+        opacity: 0;
+        pointer-events: none; /* Prevent interaction after fade */
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Preloader HTML -->
+      <div id="preloader">
+        <div class="spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

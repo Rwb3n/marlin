@@ -17,6 +17,8 @@ if (rootElement) {
       </ThemeProvider>
     </StrictMode>,
   );
+  // Add class to body after rendering starts to hide preloader
+  document.body.classList.add('app-loaded');
 } else {
   console.error('Failed to find the root element');
 } 
