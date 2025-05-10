@@ -59,19 +59,19 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
   const validationState = hasError ? 'error' : isValid ? 'success' : 'default';
   
   // Define base and theme-specific classes using dark: variant
-  const baseTextClass = 'text-origin-text dark:text-apex-text';
-  const baseBorderClass = 'border-origin-muted dark:border-apex-muted';
-  const focusBorderClass = 'focus:border-origin-accent dark:focus:border-apex-accent';
-  const focusRingClass = 'focus:ring-origin-accent/20 dark:focus:ring-apex-accent/20';
-  const hoverBorderClass = 'hover:border-origin-accent dark:hover:border-apex-accent';
-  const errorTextClass = 'text-danger'; 
-  const errorBorderClass = 'border-danger';
-  const errorFocusRingClass = 'focus:ring-danger/20';
+  const baseTextClass = 'text-foreground';
+  const baseBorderClass = 'border-border';
+  const focusBorderClass = 'focus:border-accent';
+  const focusRingClass = 'focus:ring-accent/20';
+  const hoverBorderClass = 'hover:border-accent';
+  const errorTextClass = 'text-destructive';
+  const errorBorderClass = 'border-destructive';
+  const errorFocusRingClass = 'focus:ring-destructive/20';
   const successBorderClass = 'border-success';
   const successFocusRingClass = 'focus:ring-success/20';
-  const bgClass = 'bg-origin-bg-card dark:bg-apex-bg-card';
-  const iconColorClass = 'text-origin-muted dark:text-apex-muted';
-  const loadingSpinnerClass = 'border-origin-accent border-t-transparent dark:border-apex-accent dark:border-t-transparent';
+  const bgClass = 'bg-card';
+  const iconColorClass = 'text-muted-foreground';
+  const loadingSpinnerClass = 'border-accent border-t-transparent';
   
   // Container classes
   const containerClasses = clsx(
@@ -84,10 +84,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
   // Label classes
   const labelClasses = clsx(
     'block text-sm font-medium mb-1',
-    {
-      [errorTextClass]: hasError,
-      // Add default text color if needed, e.g., 'text-origin-text dark:text-apex-text'
-    }
+    hasError ? errorTextClass : 'text-foreground'
   );
   
   // Select wrapper classes
@@ -99,10 +96,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
   const selectClasses = clsx(
     'block appearance-none rounded px-4 py-3 pr-8 w-full border focus:outline-none transition-all',
     bgClass,
+    baseTextClass,
     disabled || isLoading ? 'opacity-50 cursor-not-allowed' : hoverBorderClass,
-    hasError ? errorTextClass : baseTextClass,
     {
-      [clsx(errorBorderClass, errorFocusRingClass)]: hasError,
+      [clsx(errorBorderClass, errorFocusRingClass, 'text-destructive')]: hasError,
       [clsx(successBorderClass, successFocusRingClass)]: isValid && !hasError,
       [clsx(baseBorderClass, focusBorderClass, focusRingClass)]: !hasError && !isValid,
     },
@@ -112,10 +109,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
   // Helper text classes
   const helperTextClasses = clsx(
     'text-xs mt-1',
-    {
-      [errorTextClass]: hasError,
-      'text-origin-muted dark:text-apex-muted': !hasError,
-    }
+    hasError ? errorTextClass : 'text-muted-foreground'
   );
   
   // Loading spinner classes
@@ -129,7 +123,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
       {/* Label */}
       <label htmlFor={id} className={labelClasses}>
         {label}
-        {required && <span className="text-danger ml-1" aria-hidden="true">*</span>}
+        {required && <span className="text-destructive ml-1" aria-hidden="true">*</span>}
       </label>
       
       <div className={selectWrapperClasses}>

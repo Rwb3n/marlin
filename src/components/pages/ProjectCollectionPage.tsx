@@ -3,25 +3,23 @@ import Layout from '../layout/Layout';
 import Container from '../layout/Container';
 import Grid from '../layout/Grid';
 import Heading from '../ui/Heading';
-import ProjectCard from '../cards/ProjectCard'; // Assuming ProjectCard is already .tsx
-import Text from '../ui/Text'; // Assuming Text is already .tsx
-import { getAllProjects } from '../../data/projectsData'; // Removed ProjectSummary type import
-import { getPageMetadata, CombinedPageMetadata } from '../../data/metaData'; // Import type
+import ProjectCard from '../cards/ProjectCard';
+import Text from '../ui/Text';
+import { fetchProjects, ProjectSkeleton } from '../../services/contentful'; // Use ProjectSkeleton
+import { getPageMetadata, CombinedPageMetadata } from '../../data/metaData';
+import type { Entry } from 'contentful'; // Import Entry type
 
-// Define ProjectSummary locally based on usage
-interface ProjectSummary {
-  id: string;
-  title: string;
-  image?: { // Make image optional or provide a default
-    src: string;
-    alt: string;
-  };
-  intro: string; 
-  // Add other fields if needed by ProjectCard
+// Removed local ProjectSummary interface, will use ContentfulProject
+
+// Type guard for ProjectSkeleton fields
+function isProjectFields(fields: any): fields is ProjectSkeleton['fields'] {
+  return (
+    fields &&
+    typeof fields.title === 'string' &&
+    typeof fields.slug === 'string'
+    // We can add more checks for other non-optional fields if necessary
+  );
 }
-
-// Define PageMetadata locally if needed, or rely on inferred type
-// interface PageMetadata { ... }
 
 /**
  * ProjectCollectionPage Component
@@ -29,22 +27,27 @@ interface ProjectSummary {
  * Displays a grid listing all available projects.
  */
 const ProjectCollectionPage: React.FC = () => {
-  // Type inference for projects
-  const [projects, setProjects] = useState(getAllProjects()); 
-  const [loading, setLoading] = useState<boolean>(false); // Initialize loading to false if data is fetched synchronously
+  const [projects, setProjects] = useState<Entry<ProjectSkeleton>[]>([]); // Updated type to Entry<ProjectSkeleton>[]
+  const [loading, setLoading] = useState<boolean>(true); // Initialize loading to true
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch projects data on component mount - Adjusted for synchronous fetch
   useEffect(() => {
-    // If getAllProjects is potentially async in the future, add loading/error handling back
-    try {
-      const allProjects = getAllProjects(); // Fetch data synchronously
-      setProjects(allProjects);
-    } catch (err) {
-      console.error("Error fetching projects:", err);
-      setError(err instanceof Error ? err.message : 'Error loading projects');
-    }
-  }, []); // Empty dependency array means this runs once on mount
+    const loadProjects = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const fetchedProjects = await fetchProjects();
+        setProjects(fetchedProjects);
+      } catch (err) {
+        console.error("Error fetching projects from Contentful:", err);
+        setError(err instanceof Error ? err.message : 'Error loading projects');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
+  }, []);
 
   // Get metadata for the page
   const pageMeta = getPageMetadata('projects');
@@ -105,16 +108,63 @@ const ProjectCollectionPage: React.FC = () => {
             // Example responsive gap if supported: gap={{ base: 'medium', md: 'large' }}
           >
             {/* Map through projects and render ProjectCard for each */}
-            {projects.map(project => (
-              <ProjectCard
-                key={project.id}
-                id={project.id} 
-                title={project.title}
-                image={project.heroImage} // Use heroImage instead of image
-                description={project.intro} // Use the intro as the description
-                // Pass other necessary props if ProjectCard requires them
-              />
-            ))}
+            {projects.map(project => {
+              if (!isProjectFields(project.fields)) {
+                console.warn('Project with unexpected field structure encountered:', project.sys.id);
+                return null; 
+              }
+              const fields = project.fields as ProjectSkeleton['fields'];
+
+              let imageUrl: string | undefined = undefined;
+              let imageAltText: string | undefined = undefined;
+
+              // @ts-ignore
+              const imageFile = fields.heroImage?.fields?.file;
+              if (imageFile && typeof imageFile.url === 'string') {
+                const urlString: string = imageFile.url;
+                if (urlString.startsWith('//')) {
+                  imageUrl = `https:${urlString}`;
+                } else {
+                  imageUrl = urlString;
+                }
+
+                // @ts-ignore
+                const heroImageFields = fields.heroImage?.fields;
+                if (typeof heroImageFields?.description === 'string' && heroImageFields.description.trim() !== '') {
+                  imageAltText = heroImageFields.description;
+                } else if (typeof heroImageFields?.title === 'string' && heroImageFields.title.trim() !== '') {
+                  imageAltText = heroImageFields.title;
+                } else {
+                  // @ts-ignore
+                  imageAltText = fields.title || 'Project image'; 
+                }
+              }
+              
+              // @ts-ignore
+              const projectDescription = fields.overview || '';
+              const truncatedDescription = projectDescription.length > 100 ? projectDescription.substring(0, 100) + '...' : projectDescription;
+
+              return (
+                <ProjectCard
+                  key={project.sys.id}
+                  id={project.sys.id} 
+                  // @ts-ignore
+                  title={fields.title || 'Untitled Project'} 
+                  image={imageUrl}
+                  imageAlt={imageAltText}
+                  description={truncatedDescription}
+                  // @ts-ignore
+                  href={fields.slug ? `/projects/${fields.slug}` : '#'} 
+                  // @ts-ignore
+                  status={fields.status}
+                  // @ts-ignore
+                  category={fields.category} 
+                  // @ts-ignore
+                  year={fields.year}
+                  displayMode="default" 
+                />
+              );
+            })}
           </Grid>
         )}
       </Container>

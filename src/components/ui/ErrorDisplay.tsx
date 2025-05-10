@@ -51,14 +51,30 @@ export default function ErrorDisplay({
 }: ErrorDisplayProps) {
   const { theme } = useTheme();
 
-  // Define theme-aware classes using dark: variant
-  const containerBgClass = 'bg-red-100 dark:bg-red-900/20';
-  const containerBorderClass = 'border-red-400 dark:border-red-600/50';
-  const textColorClass = 'text-red-700 dark:text-red-300';
-  const iconColorClass = 'text-red-500 dark:text-red-400';
-  const buttonBgClass = 'bg-red-200 dark:bg-red-800/30';
-  const buttonHoverBgClass = 'hover:bg-red-300 dark:hover:bg-red-700/40';
-  const buttonTextClass = 'text-red-800 dark:text-red-200';
+  // --- Determine Semantic Color Classes based on Severity ---
+  let severityPrefix: 'destructive' | 'warning' | 'info';
+  switch (severity) {
+    case 'info':
+      severityPrefix = 'info';
+      break;
+    case 'warning':
+      severityPrefix = 'warning';
+      break;
+    case 'critical':
+    case 'error':
+    default:
+      severityPrefix = 'destructive';
+      break;
+  }
+
+  const containerBgClass = `bg-${severityPrefix}/10`; // Use a subtle background tint
+  const containerBorderClass = `border-${severityPrefix}/40`;
+  const textColorClass = `text-${severityPrefix}`; // Main text color
+  const iconColorClass = `text-${severityPrefix}`; // Icon color same as text
+  // For buttons/links, use the main color as bg and foreground as text
+  const actionBgClass = `bg-${severityPrefix}`; 
+  const actionTextClass = `text-${severityPrefix}-foreground`;
+  const actionHoverBgClass = `hover:bg-${severityPrefix}/80`; // Slightly faded hover
 
   // Default icons for each severity type if none provided
   const defaultIcon = () => {
@@ -111,13 +127,12 @@ export default function ErrorDisplay({
             {onRetry && (
               <Button 
                 onClick={onRetry}
-                variant="primary"
                 size="small"
                 className={clsx(
                   'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-                  buttonBgClass,
-                  buttonTextClass,
-                  buttonHoverBgClass
+                  actionBgClass,
+                  actionTextClass,
+                  actionHoverBgClass
                 )}
               >
                 Try Again
@@ -127,9 +142,12 @@ export default function ErrorDisplay({
             {backLink && (
               <Link 
                 href={backLink}
-                className={`px-4 py-2 text-sm rounded border inline-flex items-center justify-center ${
-                  buttonBgClass
-                }`}
+                className={clsx(
+                  'px-3 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center justify-center no-underline',
+                  actionBgClass,
+                  actionTextClass,
+                  actionHoverBgClass
+                )}
               >
                 {backLabel}
               </Link>

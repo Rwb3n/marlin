@@ -25,14 +25,14 @@ export const Code: React.FC<CodeProps> = ({
 }) => {
   // Determine background color based on inline prop and theme
   const bgClass = block 
-    ? 'bg-origin-bg-code dark:bg-apex-bg-code'      // Default background for block
-    : 'bg-origin-bg-code/10 dark:bg-apex-bg-code/10'; // Lighter background for inline
+    ? 'bg-muted'      // Use semantic background for block
+    : 'bg-muted/50';  // Use lighter semantic background for inline
 
   // Base classes applied to all code elements
   const baseClasses = clsx(
     'font-mono',
     bgClass,
-    'text-origin-accent dark:text-apex-accent',
+    'text-accent', // Use semantic text color
     'rounded',
     block 
       ? 'block p-4 overflow-x-auto mb-paragraph' 

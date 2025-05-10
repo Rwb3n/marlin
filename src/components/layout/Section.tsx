@@ -51,17 +51,18 @@ export const Section: React.FC<SectionProps> = ({
   };
 
   // Determine background classes based on prop using dark: variant
+  // We map the prop values to semantic classes
   const backgroundClasses = {
     none: '', // No background class
-    default: 'bg-origin-background dark:bg-apex-background',
-    light: 'bg-origin-bg-light dark:bg-apex-bg-light',
-    dark: 'bg-origin-bg-dark text-origin-text-inverted dark:bg-apex-bg-dark dark:text-apex-text-inverted',
-    accent: 'bg-origin-accent text-origin-text-inverted dark:bg-apex-accent dark:text-apex-text-inverted',
+    default: 'bg-background text-foreground', // Use standard bg/text
+    light: 'bg-card text-card-foreground', // Use card bg/text (often slightly off-white/dark)
+    dark: 'bg-foreground text-background', // Use inverted bg/text (e.g., black on white / white on black)
+    accent: 'bg-accent text-accent-foreground', // Use accent bg/text
   };
 
   // Divider styling
   const dividerClass = withDivider 
-    ? 'border-b border-origin-border dark:border-apex-border' 
+    ? 'border-b border-border' // Use semantic border
     : '';
 
   // Combine all section classes

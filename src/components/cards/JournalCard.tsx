@@ -33,7 +33,7 @@ interface JournalCardProps {
   /** Title of the journal entry */
   title: string;
   /** Short excerpt or description of the entry */
-  excerpt: string;
+  excerpt?: string;
   /** Link to the full journal entry */
   href: string;
   /** Whether this is a highlighted/featured card */
@@ -105,14 +105,16 @@ const JournalCard: React.FC<JournalCardProps> = ({
           </h2>
         
           {/* Excerpt - Apply line-clamp directly */}
-          <Paragraph 
-            className={clsx(
-              'text-sm opacity-80 mb-4 flex-grow', // Add flex-grow here?
-              `line-clamp-${excerptLines}`
-            )}
-          >
-            {excerpt}
-          </Paragraph>
+          {excerpt && (
+            <Paragraph 
+              className={clsx(
+                'text-sm opacity-80 mb-4 flex-grow',
+                `line-clamp-${excerptLines}`
+              )}
+            >
+              {excerpt}
+            </Paragraph>
+          )}
         
           {/* Read More Link - REMOVED */}
           {/* 

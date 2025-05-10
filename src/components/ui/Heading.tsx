@@ -3,10 +3,12 @@
  * 
  * This component implements responsive heading elements (h1-h6) with consistent
  * styling and spacing. It automatically adapts to the current theme.
+ * It leverages the Text component for core styling.
  */
 
 import React from 'react';
 import clsx from 'clsx';
+import { Text, TextSize } from './Text'; // Import Text and TextSize
 
 export interface HeadingProps {
   /** Heading level (1-6) which maps to h1-h6 HTML elements */
@@ -23,6 +25,16 @@ export interface HeadingProps {
   centered?: boolean;
 }
 
+// Mapping from heading level to Text component size prop
+const levelToTextSize: Record<1 | 2 | 3 | 4 | 5 | 6, TextSize> = {
+  1: 'xl', // Map level 1 to largest available TextSize
+  2: 'xl', // Map level 2 to largest available TextSize
+  3: 'lg', // Map level 3 to lg
+  4: 'base', // Map level 4 to base
+  5: 'sm', // Map level 5 to sm
+  6: 'xs', // Map level 6 to xs
+};
+
 export const Heading: React.FC<HeadingProps> = ({
   level = 2,
   children,
@@ -31,38 +43,33 @@ export const Heading: React.FC<HeadingProps> = ({
   centered = false,
   ...props
 }) => {
-  // Map the level to the appropriate HTML element
-  const Component = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-  
-  // Base classes applied to all headings
+  // Base classes applied to all headings - keep font-display and margin
   const baseClasses = clsx(
     'font-display tracking-wide',
-    centered && 'text-center',
-    !noMargin && 'mb-heading',
-    'text-foreground'
+    !noMargin && 'mb-heading'
+    // Removed text-center (handled by Text align prop)
+    // Removed text-foreground (handled by Text color prop)
   );
   
-  // Size-specific classes based on heading level
-  const sizeClasses = {
-    1: 'text-4xl md:text-5xl leading-tight',
-    2: 'text-3xl md:text-4xl leading-tight',
-    3: 'text-2xl md:text-3xl leading-tight',
-    4: 'text-xl md:text-2xl',
-    5: 'text-lg md:text-xl',
-    6: 'text-base md:text-lg',
-  };
-  
-  // Combine all classes
+  // Combine classes - add external className here
   const classes = clsx(
     baseClasses,
-    sizeClasses[level],
     className
   );
   
   return (
-    <Component className={classes} {...props}>
+    // Use Text component, passing relevant props
+    <Text
+      as={`h${level}`}
+      size={levelToTextSize[level]}
+      weight="bold" // Headings are typically bold
+      color="default" // Use default text color from Text component
+      align={centered ? 'center' : undefined}
+      className={classes} // Apply font-display, margin, and external class
+      {...props}
+    >
       {children}
-    </Component>
+    </Text>
   );
 };
 

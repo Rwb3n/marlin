@@ -75,8 +75,8 @@ module.exports = {
         },
         // Keep original light/dark objects if they are imported/used directly elsewhere
         // If not, they can be fully removed.
-        light: colors.light,
-        dark: colors.dark,
+        // light: colors.light,
+        // dark: colors.dark,
       },
       borderRadius: {
         lg: 'var(--radius)',

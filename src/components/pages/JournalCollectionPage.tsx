@@ -3,9 +3,9 @@ import Layout from '../layout/Layout';
 import Container from '../layout/Container';
 import Grid from '../layout/Grid';
 import Heading from '../ui/Heading';
-import JournalCard from '../cards/JournalCard'; // Assuming JournalCard is .tsx
-import Text from '../ui/Text'; // Assuming Text is .tsx
-import { getAllJournalEntries } from '../../data/journalData';
+import JournalCard from '../cards/JournalCard';
+import Text from '../ui/Text';
+import { fetchJournalEntries, ContentfulJournalEntry } from '../../services/contentful';
 import { getPageMetadata, CombinedPageMetadata } from '../../data/metaData';
 
 /**
@@ -14,30 +14,34 @@ import { getPageMetadata, CombinedPageMetadata } from '../../data/metaData';
  * Displays a grid listing all available journal entries.
  */
 const JournalCollectionPage: React.FC = () => {
-  // Type inference for entries
-  const [entries, setEntries] = useState(getAllJournalEntries());
-  const [loading, setLoading] = useState<boolean>(false); // Assuming synchronous fetch
+  const [entries, setEntries] = useState<ContentfulJournalEntry[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch journal entries on component mount - Adjusted for sync fetch
   useEffect(() => {
-    try {
-      const allEntries = getAllJournalEntries();
-      setEntries(allEntries);
-    } catch (err) {
-      console.error("Error fetching journal entries:", err);
-      setError(err instanceof Error ? err.message : 'Error loading entries');
-    }
-  }, []); // Empty dependency array means this runs once on mount
+    const loadEntries = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const fetchedEntries = await fetchJournalEntries();
+        setEntries(fetchedEntries);
+      } catch (err) {
+        console.error("Error fetching journal entries from Contentful:", err);
+        setError(err instanceof Error ? err.message : 'Error loading entries');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Get metadata for the page
+    loadEntries();
+  }, []);
+
   const pageMeta = getPageMetadata('journal');
   
-  // Spread first, then set defaults using nullish coalescing
   const metadata: CombinedPageMetadata = {
-    ...pageMeta, // Spread fetched metadata first
-    title: pageMeta?.title ?? 'Journal Archive | BLUE MARLIN OS', // Use fetched title or default
-    description: pageMeta?.description ?? 'Read through the latest updates, research notes, and articles.', // Use fetched description or default
+    ...pageMeta,
+    title: pageMeta?.title ?? 'Journal Archive | BLUE MARLIN OS',
+    description: pageMeta?.description ?? 'Read through the latest updates, research notes, and articles.',
   };
 
   return (
@@ -81,19 +85,15 @@ const JournalCollectionPage: React.FC = () => {
         {/* Entries grid */}
         {!loading && !error && entries.length > 0 && (
           <Grid 
-            columns={{ sm: 1, md: 2, lg: 3 }} // Corrected responsive columns (adjust breakpoints as needed)
+            columns={{ sm: 1, md: 2, lg: 3 }}
             gap="large"
-            // Example responsive gap: gap={{ base: 'medium', md: 'large' }}
           >
-            {/* Map through entries and render JournalCard */}
             {entries.map(entry => (
               <JournalCard
-                key={entry.id}
-                title={entry.title}
-                date={entry.date}
-                excerpt={entry.excerpt}
-                href={entry.url || `/journal/${entry.id}`} // Use entry.url or construct link
-                // Pass other necessary props from JournalEntrySummary if needed
+                key={entry.sys.id}
+                title={entry.fields.title}
+                date={entry.fields.date || ''}
+                href={`/journal/${entry.fields.slug}`}
               />
             ))}
           </Grid>

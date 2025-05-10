@@ -1,12 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Helmet } from 'react-helmet-async'; // Removed
 
 // Data Imports
-import homeData from '../../data/homeData'; // Default import
-import { getAllProjects } from '../../data/projectsData'; // Use getAllProjects
-import { getAllJournalEntries } from '../../data/journalData'; // Use getAllJournalEntries
-import { ProjectStatus } from '../../data/projectsData'; // Import ProjectStatus
+// import homeData from '../../data/homeData'; // REMOVED
+// import { getAllProjects } from '../../data/projectsData'; // REMOVED
+// import { getAllJournalEntries } from '../../data/journalData'; // REMOVED
+// import { ProjectStatus } from '../../data/projectsData'; // REMOVED
 import { getPageMetadata, CombinedPageMetadata } from '../../data/metaData'; // Import type
+
+// Service Imports
+import { fetchProjects, fetchJournalEntries } from '../../services/contentful'; // Added fetchJournalEntries
+// Assuming ProjectEntry and JournalEntry are types exported from contentful.ts
+// For now, let's assume Project and JournalEntry are the correct types or local definitions are needed.
+// import { Project as ContentfulProject, JournalEntry as ContentfulJournalEntry } from '../../services/contentful'; // Example
+
+// Interface for props expected by ProjectsSection cards
+interface ProjectCardProps {
+  id: string;
+  title: string;
+  slug: string;
+  category?: string;
+  heroImage: { url: string; alt: string };
+  excerpt?: string;
+  status?: string;
+  url: string;
+}
+
+// Interface for props expected by JournalSection cards
+interface JournalCardProps {
+  id: string;
+  title: string;
+  slug: string;
+  date: string; // Contentful date will be mapped to a string for display
+  excerpt: string; // Made non-optional, will default to empty string in mapping if not present
+  url: string;
+}
 
 // Section Imports
 import HeroSection from '../sections/HeroSection'; // Assuming default export based on previous attempts, adjust if named
@@ -23,43 +51,67 @@ import Layout from '../layout/Layout'; // Assuming named export
  * @returns {JSX.Element} The rendered home page component.
  */
 const HomePage: React.FC = () => {
-  // Fetch projects and journal entries directly from homeData or use slicing
-  const projectsFromHome = homeData.projectsData; 
-  const featuredJournalEntries = homeData.recentJournalEntries;
+  const [featuredProjectsContentful, setFeaturedProjectsContentful] = useState<any[]>([]); // Using any[] as placeholder
+  const [recentJournalEntriesContentful, setRecentJournalEntriesContentful] = useState<any[]>([]); // Added for journal entries
 
-  // Map projects from homeData to match the structure expected by ProjectsSection (Project[])
-  const featuredProjects = projectsFromHome.map(proj => {
-    // Map ProjectStatus enum to the string literal type expected by ProjectSection
-    let mappedStatus: 'active' | 'maintenance' | 'development' | undefined;
-    switch (proj.status) {
-      case ProjectStatus.ACTIVE:
-      case ProjectStatus.DEPLOYED:
-      case ProjectStatus.FIELD_TESTING:
-      case ProjectStatus.OPERATIONAL_PILOT:
-        mappedStatus = 'active'; // Or map more granularly if needed
-        break;
-      case ProjectStatus.DEVELOPMENT:
-        mappedStatus = 'development';
-        break;
-      // Add cases for 'maintenance' if applicable in ProjectStatus enum
-      default:
-        mappedStatus = undefined;
-    }
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const [projects, journalEntries] = await Promise.all([
+          fetchProjects({ 'fields.isFeatured': true, limit: 3 }),
+          fetchJournalEntries({ order: '-fields.date', limit: 3 })
+        ]);
+        setFeaturedProjectsContentful(projects || []);
+        setRecentJournalEntriesContentful(journalEntries || []);
+      } catch (error) {
+        console.error("Error fetching initial homepage data:", error);
+        setFeaturedProjectsContentful([]);
+        setRecentJournalEntriesContentful([]);
+      }
+    };
+
+    loadInitialData();
+  }, []);
+
+  // Remove old static data fetching for projects
+  // const projectsFromHome = homeData.projectsData;
+  // const featuredJournalEntries = homeData.recentJournalEntries; // This will be removed now
+
+  // Map Contentful projects to the structure expected by ProjectsSection
+  const mappedFeaturedProjects: ProjectCardProps[] = featuredProjectsContentful.map((item: any) => {
+    const heroImageFile = item.fields.heroImage?.fields?.file;
+    const heroImageAlt = item.fields.heroImage?.fields?.description || item.fields.heroImage?.fields?.title || 'Project image';
+    return {
+      id: item.sys.id,
+      title: item.fields.title || 'Untitled Project',
+      slug: item.fields.slug || item.sys.id, // Fallback slug to id if not present
+      category: item.fields.category || undefined,
+      heroImage: {
+        url: heroImageFile?.url ? `https:${heroImageFile.url}` : '/placeholder-image.jpg', // Add https: and a placeholder
+        alt: heroImageAlt,
+      },
+      excerpt: item.fields.excerpt || undefined,
+      status: item.fields.status || undefined,
+      url: `/projects/${item.fields.slug || item.sys.id}`,
+    };
+  });
+
+  // Map Contentful journal entries to the structure expected by JournalSection
+  const mappedRecentJournalEntries: JournalCardProps[] = recentJournalEntriesContentful.map((item: any) => {
+    // Basic date formatting, can be improved with a library like date-fns if needed
+    const formattedDate = item.fields.date ? new Date(item.fields.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }) : 'Date unavailable';
 
     return {
-      ...proj, // Spread existing properties from ProjectData
-      category: proj.category || 'Unknown Category', // Provide default if category is missing
-      intro: proj.description, // Map description to intro
-      heroImage: proj.image, // Map image to heroImage
-      year: '', // Add missing required properties with defaults if necessary
-      specs: [],
-      overview: proj.description, // Use description as overview if needed
-      technical: { content: '', list: [] },
-      interface: { content: '', list: [] },
-      results: '',
-      relatedProjects: [],
-      url: `/projects/${proj.id}`, // Add the required url property
-      status: mappedStatus, // Use the mapped status
+      id: item.sys.id,
+      title: item.fields.title || 'Untitled Entry',
+      slug: item.fields.slug || item.sys.id, // Fallback slug to id
+      date: formattedDate,
+      excerpt: typeof item.fields.excerpt === 'string' ? item.fields.excerpt : '', // Ensure excerpt is always a string
+      url: `/journal/${item.fields.slug || item.sys.id}`,
     };
   });
 
@@ -96,15 +148,17 @@ const HomePage: React.FC = () => {
       <ProjectsSection
         title="Featured Projects" // Provide title directly
         // subtitle="Recent work and case studies" // Optional subtitle
-        projects={featuredProjects} // Pass fetched projects
+        projects={mappedFeaturedProjects} // Pass mapped Contentful projects
         // viewAllLink="/projects" // Provide link directly if needed
+        cardDisplayMode='homepage'
+        forceSingleColumn={true}
       />
 
       {/* Journal Section - Adjust props based on JournalSection definition */}
       <JournalSection
         title={{ text: "Recent Journal Entries" }} // Wrap title in object
         // subtitle="Updates, thoughts, and findings" // Optional subtitle
-        entries={featuredJournalEntries} // Pass fetched entries
+        entries={mappedRecentJournalEntries} // Pass mapped Contentful journal entries
         // viewAllLink="/journal" // Provide link directly if needed
       />
 

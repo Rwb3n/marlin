@@ -4,6 +4,10 @@
  * A flexible card component providing a container with consistent styling for content.
  * Supports various border, shadow, and padding options for different visual appearances.
  * Commonly used for displaying grouped content with a distinct visual boundary.
+ * 
+ * @note For full-card link behavior, the recommended pattern is to wrap this Card
+ *       (with hoverable=false and clickable=false) inside a <Link variant="wrapper"> component.
+ *       The Link wrapper will handle the hover/focus states and accessibility.
  */
 
 import React from 'react';

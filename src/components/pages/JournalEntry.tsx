@@ -1,125 +1,168 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import Layout from '../layout/Layout'; // Assuming .tsx
-import Container from '../layout/Container'; // Assuming .tsx
-import Link from '../ui/Link'; // Import the enhanced custom Link component
+import Layout from '../layout/Layout';
+import Container from '../layout/Container';
+import Link from '../ui/Link';
 import { 
-  getJournalEntryById, 
-  getAdjacentEntries, // Import the new function
-  JournalEntry as JournalEntryType 
-} from '../../data/journalData'; // Import type
-import { getPageMetadata, CombinedPageMetadata } from '../../data/metaData'; // Import type
-import NotFoundComponent from '../ui/NotFoundComponent'; // Assuming .tsx
-import AdjacentNavigation from '../ui/AdjacentNavigation'; // Import the new component
-import { useTheme } from '../../context/ThemeContext'; // Import useTheme for border color
+  fetchJournalEntryBySlug, 
+  fetchJournalNavigationList,
+  JournalEntrySkeleton
+} from '../../services/contentful';
+import type { Entry } from 'contentful';
+import { getPageMetadata, CombinedPageMetadata } from '../../data/metaData';
+// @ts-ignore // Ignoring for NotFoundComponent.jsx as it's a JS file
+import NotFoundComponent from '../ui/NotFoundComponent';
+import AdjacentNavigation from '../ui/AdjacentNavigation';
+import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer';
+import { BLOCKS, INLINES, MARKS } from '@contentful/rich-text-types';
+import Heading from '../ui/Heading';
+import Paragraph from '../ui/Paragraph';
 
-// --- Type Definitions ---
-
-// Type for the params from react-router-dom
 interface EntryParams extends Record<string, string | undefined> {
   entryId: string;
 }
 
-/**
- * JournalEntry Component (TypeScript Version)
- * 
- * Displays a full journal entry/blog post.
- */
+interface AdjacentItem {
+  id: string;
+  title: string;
+  pathPrefix: string;
+}
+
 const JournalEntry: React.FC = () => {
-  const { entryId } = useParams<EntryParams>();
-  const [entry, setEntry] = useState<JournalEntryType | null>(null);
+  const { entryId: entrySlug } = useParams<EntryParams>();
+  const [entry, setEntry] = useState<Entry<JournalEntrySkeleton> | null>(null);
+  const [journalNavList, setJournalNavList] = useState<Pick<Entry<JournalEntrySkeleton>, 'sys' | 'fields'>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { theme } = useTheme(); // Get theme for border color
-  
-  // Fetch journal entry data based on the URL parameter
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    setEntry(null); // Reset entry on ID change
 
-    if (!entryId) {
-      setError('No journal entry ID provided.');
+  useEffect(() => {
+    if (!entrySlug) {
+      setError('No journal entry slug provided.');
       setLoading(false);
       return;
     }
 
-    try {
-      const entryData = getJournalEntryById(entryId); // Fetch data
-      
-      if (!entryData) {
-        setError('Journal entry not found');
-      } else {
-        setEntry(entryData);
-      }
-    } catch (err) {
-      console.error("Error fetching journal entry:", err);
-      setError(err instanceof Error ? err.message : 'Error loading journal entry');
-    } finally {
+    const loadData = async () => {
+      setLoading(true);
+      setError(null);
+      setEntry(null);
+      setJournalNavList([]);
+      try {
+        const [entryData, navListData] = await Promise.all([
+          fetchJournalEntryBySlug(entrySlug),
+          fetchJournalNavigationList()
+        ]);
+
+        if (!entryData) {
+          setError('Journal entry not found');
+        } else {
+          setEntry(entryData);
+        }
+        setJournalNavList(navListData);
+      } catch (err) {
+        console.error("Error fetching journal entry data:", err);
+        setError(err instanceof Error ? err.message : 'Error loading journal entry');
+      } finally {
         setLoading(false);
-    }
-  }, [entryId]);
+      }
+    };
+    loadData();
+  }, [entrySlug]);
   
-  // Calculate adjacent entries using useMemo
   const adjacentEntries = useMemo(() => {
-    if (!entryId) return { prev: null, next: null };
-    return getAdjacentEntries(entryId);
-  }, [entryId]);
+    const currentFields = entry?.fields;
+    if (!(currentFields as any)?.slug || journalNavList.length === 0) {
+      return { prev: null, next: null };
+    }
+    const currentSlug = (currentFields as any).slug;
+    const currentIndex = journalNavList.findIndex(p => ((p.fields as any))?.slug === currentSlug);
 
-  // Determine theme border color
-  const themeBorderColor = theme === 'light' ? 'border-light-border' : 'border-dark-border';
+    if (currentIndex === -1) {
+      return { prev: null, next: null };
+    }
 
-  // Handle loading state
+    const prevEntryData = currentIndex > 0 ? journalNavList[currentIndex - 1] : null;
+    const nextEntryData = currentIndex < journalNavList.length - 1 ? journalNavList[currentIndex + 1] : null;
+
+    const formatNavItem = (navData: Pick<Entry<JournalEntrySkeleton>, 'sys' | 'fields'> | null): AdjacentItem | null => {
+      const navFields = navData?.fields;
+      if (!(navFields as any)?.slug) return null;
+      return {
+        id: String((navFields as any).slug),
+        title: String((navFields as any).title || 'Entry'),
+        pathPrefix: '/journal'
+      };
+    };
+
+    return {
+      prev: formatNavItem(prevEntryData),
+      next: formatNavItem(nextEntryData)
+    };
+  }, [entry, journalNavList]);
+
   if (loading) {
     return (
       <Layout pageTitle="Loading Journal Entry...">
         <Container className="py-10 text-center">
-          <div className="loading-state">Loading journal entry...</div>
-          {/* Add Spinner? */}
+          <div>Loading journal entry...</div>
         </Container>
       </Layout>
     );
   }
   
-  // Handle error state or entry not found
   if (error || !entry) {
     const specificErrorMessage = (error && error !== 'Journal entry not found') ? error : undefined;
-    
     return (
       <NotFoundComponent 
         title={error === 'Journal entry not found' ? "Journal Entry Not Found" : "Error Loading Entry"}
-        message={specificErrorMessage} // Pass specific error message if it exists
-        linkHref="/journal" // Link to the main journal collection
+        message={specificErrorMessage}
+        linkHref="/journal"
         linkText="View All Journal Entries"
-        // Suggestion type could be dynamic based on error, but keeping simple
         suggestionType="journal" 
       />
     );
   }
   
-  // Get metadata for the journal entry page (use fetched entry)
-  // Provide fallback object to getPageMetadata if needed
-  const metadata: CombinedPageMetadata = getPageMetadata(`/journal/${entry.id}`) || {
-    title: entry.title, 
-    description: entry.excerpt,
-    // Add other required fields from CombinedPageMetadata with defaults
-    titleTemplate: '%s | Journal', 
-    defaultImage: '/images/og-default.jpg', 
-    twitterCard: 'summary_large_image', 
-    language: 'en-US', 
-    locale: 'en_US', 
-    type: 'article', // Correct type for blog post
-    canonicalUrl: `/journal/${entry.id}`
+  const entryTitle = String((entry.fields as any)?.title || 'Journal Entry');
+  const entryDescription = String((entry.fields as any)?.excerpt || 'An entry from the journal.');
+  const entrySlugForMeta = String((entry.fields as any)?.slug || entrySlug || 'unknown-entry');
+
+  const metadata: CombinedPageMetadata = getPageMetadata(`/journal/${entrySlugForMeta}`) || {
+    title: entryTitle,
+    description: entryDescription,
+    titleTemplate: '%s | Journal',
+    defaultImage: '/images/og-default.jpg',
+    twitterCard: 'summary_large_image',
+    language: 'en-US',
+    locale: 'en_US',
+    type: 'article',
+    canonicalUrl: `/journal/${entrySlugForMeta}`,
   };
   
-  // Construct full image URL if author image path is relative
-  const authorImageUrl = entry.author?.image?.startsWith('/') 
-    ? entry.author.image 
-    : undefined; // Handle case where image is not available or absolute
+  const richTextOptions: Options = {
+    renderMark: {
+      [MARKS.BOLD]: text => <strong className="font-bold">{text}</strong>,
+      [MARKS.ITALIC]: text => <em className="italic">{text}</em>,
+      [MARKS.CODE]: text => <code className="bg-muted dark:bg-muted/50 p-1 rounded text-sm font-mono">{text}</code>,
+    },
+    renderNode: {
+      [BLOCKS.HEADING_1]: (node, children) => <Heading level={1} className="text-3xl md:text-4xl font-bold mb-4 mt-6">{children}</Heading>,
+      [BLOCKS.HEADING_2]: (node, children) => <Heading level={2} className="text-2xl md:text-3xl font-bold mb-3 mt-5">{children}</Heading>,
+      [BLOCKS.HEADING_3]: (node, children) => <Heading level={3} className="text-xl md:text-2xl font-bold mb-3 mt-5">{children}</Heading>,
+      [BLOCKS.PARAGRAPH]: (node, children) => <Paragraph className="mb-4 text-base leading-relaxed">{children}</Paragraph>,
+      [BLOCKS.UL_LIST]: (node, children) => <ul className="list-disc pl-5 mb-4 space-y-1">{children}</ul>,
+      [BLOCKS.OL_LIST]: (node, children) => <ol className="list-decimal pl-5 mb-4 space-y-1">{children}</ol>,
+      [BLOCKS.LIST_ITEM]: (node, children) => <li>{children}</li>,
+      [BLOCKS.QUOTE]: (node, children) => <blockquote className="border-l-4 border-border pl-4 italic my-4 text-muted-foreground">{children}</blockquote>,
+      [INLINES.HYPERLINK]: (node, children) => {
+        const { uri } = node.data;
+        return <Link href={uri} variant="default" target={uri.startsWith('http') ? '_blank' : undefined} rel={uri.startsWith('http') ? 'noopener noreferrer' : undefined}>{children}</Link>;
+      },
+    },
+  };
 
   return (
     <Layout>
-      {/* Metadata tags rendered directly */}
       <title>{metadata.title}</title>
       <meta name="description" content={metadata.description} />
       <meta property="og:title" content={metadata.title} />
@@ -127,107 +170,69 @@ const JournalEntry: React.FC = () => {
       <meta property="og:type" content={metadata.type || 'article'} /> 
       <meta property="og:url" content={metadata.canonicalUrl} /> 
       {metadata.image && <meta property="og:image" content={metadata.image} />}
-      {/* Add article specific meta tags if desired */}
-      {entry.author?.name && <meta property="article:author" content={entry.author.name} />} 
-      {entry.date && <meta property="article:published_time" content={new Date(entry.date).toISOString()} />} 
-      {entry.tags?.map(tag => <meta property="article:tag" content={tag} key={tag} />)} 
-      {/* End of metadata tags */}
+      {(entry.fields as any)?.date && <meta property="article:published_time" content={new Date((entry.fields as any).date).toISOString()} />} 
+      {(entry.fields as any)?.tags?.map((tag: string) => <meta property="article:tag" content={tag} key={tag} />)} 
       
       <Container className="py-12 md:py-16 lg:py-20">
         <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-3 lg:gap-16">
-          {/* Main Content Column */}
-          <div className="lg:col-span-2 blog-main prose prose-lg dark:prose-invert max-w-none">
-            {/* Entry Header */}
+          <div className="lg:col-span-2 blog-main">
             <div className="mb-8 border-b border-border pb-8">
-              {/* Metadata: Date and Tags - Apply font-mono here */}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground mb-4 font-mono">
-                <span className="blog-date">{entry.date}</span>
-                {entry.tags?.map((tag) => (
+                {(entry.fields as any)?.date && <span className="blog-date">{new Date((entry.fields as any).date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
+                {(entry.fields as any)?.tags?.map((tag: string) => (
                   <Link 
                     href={`/journal/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`} 
-                    // Using a variant similar to 'tag', but maybe slightly different visually for header context
-                    // Let's reuse 'tag' for now, but potentially create a new variant if needed
                     variant="tag" 
-                    className="hover:bg-accent hover:text-accent-foreground transition-colors" // Specific hover for header tags
+                    className="hover:bg-accent hover:text-accent-foreground transition-colors"
                     key={tag}
                   >
                     {tag}
                   </Link>
                 ))}
               </div>
-              {/* Title */}
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 font-display">
-                {entry.title}
+                {entryTitle}
               </h1>
-              
-              {/* Author Info */}
-              {entry.author && (
-                <div className="flex items-center gap-4">
-                  {authorImageUrl && (
-                    <img 
-                      src={authorImageUrl} 
-                      alt={entry.author.name} 
-                      className="h-12 w-12 rounded-full object-cover"
-                    />
-                  )}
-                  <div>
-                    <div className="font-semibold">{entry.author.name}</div>
-                    <div className="text-sm text-muted-foreground">{entry.author.role}</div>
-                  </div>
-                </div>
-              )}
             </div>
             
-            {/* Rendered Content */}
-            <div 
-              className="blog-content prose prose-lg dark:prose-invert max-w-none prose-pre:bg-apex-bg-code dark:prose-pre:bg-origin-bg-code"
-              dangerouslySetInnerHTML={{ __html: entry.content }}
-            />
-            
-            {/* Post Navigation - Using AdjacentNavigation Component */}
-            <AdjacentNavigation
-              prevItem={adjacentEntries.prev ? { ...adjacentEntries.prev, pathPrefix: '/journal' } : null}
-              nextItem={adjacentEntries.next ? { ...adjacentEntries.next, pathPrefix: '/journal' } : null}
-              prevLabel="Previous Entry"
-              nextLabel="Next Entry"
-              themeBorderColor={themeBorderColor} // Pass theme border color
-            />
+            <div className="blog-content prose prose-lg dark:prose-invert max-w-none prose-pre:bg-muted dark:prose-pre:bg-muted/50">
+              {(entry.fields as any)?.content ? documentToReactComponents((entry.fields as any).content, richTextOptions) : <Paragraph>No content available.</Paragraph>}
+            </div>
           </div>
           
-          {/* Sidebar Column */}
           <aside className="lg:col-span-1 border-t border-border pt-8 mt-8 lg:border-t-0 lg:border-l lg:pl-12 lg:pt-0 lg:mt-0">
-            {/* Related Entries */}
-            {entry.relatedEntries && entry.relatedEntries.length > 0 && (
+            {(entry.fields as any)?.relatedEntries && (entry.fields as any).relatedEntries.length > 0 && (
               <div className="mb-10">
                 <h3 className="text-xl font-semibold mb-4">Related Entries</h3>
                 <ul className="space-y-4">
-                  {entry.relatedEntries.map((related) => (
-                    <li key={related.id}>
-                      {/* Apply font-mono to the date span */}
-                      <span className="text-xs text-muted-foreground block mb-0.5 font-mono">{related.date}</span>
-                      <Link 
-                        href={`/journal/${related.id}`} 
-                        variant="subtle" // Use subtle variant for less emphasis
-                        className="font-medium" // Keep font-medium override
-                      >
-                        {related.title}
-                      </Link>
-                      {/* <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{related.excerpt}</p> */}
-                    </li>
-                  ))}
+                  {(entry.fields as any).relatedEntries.map((related: Entry<JournalEntrySkeleton>) => {
+                    const relEntryFields = related.fields;
+                    if (!relEntryFields) return null;
+                    return (
+                      <li key={related.sys.id}>
+                        {(relEntryFields as any).date && <span className="text-xs text-muted-foreground block mb-0.5 font-mono">{new Date((relEntryFields as any).date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric'})}</span>}
+                        <Link 
+                          href={`/journal/${(relEntryFields as any).slug}`} 
+                          variant="subtle"
+                          className="font-medium"
+                        >
+                          {String((relEntryFields as any).title)}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}
             
-            {/* Popular Topics/Tags - Applying no-underline here too for consistency */}
-            {entry.tags && entry.tags.length > 0 && (
+            {(entry.fields as any)?.tags && (entry.fields as any).tags.length > 0 && (
               <div>
                 <h3 className="text-xl font-semibold mb-4">Topics</h3>
                 <div className="flex flex-wrap gap-2">
-                  {entry.tags.map((tag) => (
+                  {(entry.fields as any).tags.map((tag: string) => (
                      <Link 
                       href={`/journal/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`} 
-                      variant="tag" // Use the standard tag variant
+                      variant="tag"
                       key={tag}
                     >
                       {tag}
@@ -238,6 +243,15 @@ const JournalEntry: React.FC = () => {
             )}
           </aside>
         </div>
+
+        {(adjacentEntries.prev || adjacentEntries.next) && (
+            <AdjacentNavigation 
+                prevItem={adjacentEntries.prev}
+                nextItem={adjacentEntries.next}
+                prevLabel="Previous Entry"
+                nextLabel="Next Entry"
+            />
+        )}
       </Container>
     </Layout>
   );

@@ -14,8 +14,6 @@ interface AdjacentNavigationProps {
   prevLabel: string;
   nextLabel: string;
   className?: string;
-  // Add theme-related props if necessary, or use context
-  themeBorderColor?: string; // Example: pass border color from parent
 }
 
 const AdjacentNavigation: React.FC<AdjacentNavigationProps> = ({
@@ -24,7 +22,6 @@ const AdjacentNavigation: React.FC<AdjacentNavigationProps> = ({
   prevLabel,
   nextLabel,
   className = '',
-  themeBorderColor = 'border-border' // Default border color
 }) => {
   // Only render the nav if there's at least one item
   if (!prevItem && !nextItem) {
@@ -34,8 +31,7 @@ const AdjacentNavigation: React.FC<AdjacentNavigationProps> = ({
   return (
     <nav 
       className={clsx(
-        'mt-12 pt-8 border-t',
-        themeBorderColor, 
+        'mt-12 pt-8',
         'flex flex-col sm:flex-row justify-between gap-4',
         className
       )}
@@ -45,12 +41,12 @@ const AdjacentNavigation: React.FC<AdjacentNavigationProps> = ({
       {prevItem ? (
         <Link 
           to={`${prevItem.pathPrefix}/${prevItem.id}`} 
-          className="block p-4 bg-card border border-gray-300 dark:border-border rounded-lg shadow transition-all duration-200 ease-in-out hover:shadow-lg text-left group no-underline focus:outline-none"
+          className="block p-4 bg-card border border-border rounded-lg shadow transition-all duration-200 ease-in-out hover:shadow-lg text-left group no-underline focus:outline-none"
         >
           <span className="text-sm text-muted-foreground group-hover:text-primary block mb-1 transition-colors">
             {prevLabel}
           </span>
-          <span className="font-semibold text-foreground text-base group-hover:text-primary transition-colors">
+          <span className="font-semibold text-foreground text-base group-hover:text-primary transition-colors font-display">
             {prevItem.title}
           </span>
         </Link>
@@ -63,12 +59,12 @@ const AdjacentNavigation: React.FC<AdjacentNavigationProps> = ({
       {nextItem ? (
         <Link 
           to={`${nextItem.pathPrefix}/${nextItem.id}`} 
-          className="block p-4 bg-card border border-gray-300 dark:border-border rounded-lg shadow transition-all duration-200 ease-in-out hover:shadow-lg text-left sm:text-right group no-underline focus:outline-none"
+          className="block p-4 bg-card border border-border rounded-lg shadow transition-all duration-200 ease-in-out hover:shadow-lg text-left sm:text-right group no-underline focus:outline-none"
         >
           <span className="text-sm text-muted-foreground group-hover:text-primary block mb-1 transition-colors">
             {nextLabel}
           </span>
-          <span className="font-semibold text-foreground text-base group-hover:text-primary transition-colors">
+          <span className="font-semibold text-foreground text-base group-hover:text-primary transition-colors font-display">
             {nextItem.title}
           </span>
         </Link>

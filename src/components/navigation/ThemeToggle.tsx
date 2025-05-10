@@ -60,13 +60,13 @@ export default function ThemeToggle({
   const label = isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme';
 
   // Styling based on theme and state
-  // Use specific lighter shades for the background track
-  const bgClass = isDarkTheme
-    ? 'bg-slate-700' // Further lighter shade for dark theme track
-    : 'bg-slate-200'; // Lighter shade for light theme track
+  // Use semantic classes with dark: variants
+  // Track uses a muted background
+  const bgClass = 'bg-muted/50 dark:bg-muted/50'; 
 
-  const knobBgClass = isDarkTheme ? 'bg-dark-accent' : 'bg-light-accent'; // Keep knob color as is
-  // Keep the tweaked transform value
+  // Knob uses accent color
+  const knobBgClass = 'bg-accent'; 
+  // Knob position based on dark theme state
   const transformClass = isDarkTheme ? 'translate-x-[23px]' : 'translate-x-0';
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -91,12 +91,11 @@ export default function ThemeToggle({
       aria-labelledby={labelId}
       title={label}
       className={`
-        p-0 /* Override external button padding */
+        p-0 
         relative inline-flex items-center h-6 w-11 flex-shrink-0 cursor-pointer rounded-full
-        border border-transparent /* Explicit border + transparent color */ 
-        hover:border-transparent /* Override global button hover border */
-        transition-colors duration-200 ease-in-out /* Note: transition applies to colors, not border */
-        /* Reset focus and active outlines */
+        border border-transparent
+        hover:border-transparent
+        transition-colors duration-200 ease-in-out
         focus:outline-none active:outline-none 
         ${bgClass}
         ${className}
@@ -108,20 +107,24 @@ export default function ThemeToggle({
         aria-hidden="true"
         className={`
           box-border pointer-events-none inline-block h-5 w-5 transform rounded-full
-          /* Remove shadow class entirely */
-          bg-white dark:bg-slate-300 ring-0 
+          // Knob background (overrides the track color)
+          // Change light mode bg from bg-background to bg-white for contrast
+          bg-white dark:bg-background 
+          ring-0 
           transition duration-200 ease-in-out
-          ${knobBgClass}
+          // Removed knobBgClass here, apply accent color via icon or separate element if needed
           ${transformClass}
         `}
       >
         <span
+          // Icon for dark theme (Moon)
           className={`absolute inset-0 flex h-full w-full items-center justify-center transition-opacity duration-200 ease-in-out ${isDarkTheme ? 'opacity-100' : 'opacity-0'}`}
           aria-hidden="true"
         >
           <MoonIcon /> 
         </span>
         <span
+          // Icon for light theme (Sun)
           className={`absolute inset-0 flex h-full w-full items-center justify-center transition-opacity duration-200 ease-in-out ${isDarkTheme ? 'opacity-0' : 'opacity-100'}`}
           aria-hidden="true"
         >

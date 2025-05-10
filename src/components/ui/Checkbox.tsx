@@ -50,19 +50,19 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(({
   const hasError = !!error;
   
   // Define base and theme-specific classes using dark: variant
-  const baseBorderClass = 'border-origin-muted dark:border-apex-muted';
-  const hoverBorderClass = 'hover:border-origin-accent dark:hover:border-apex-accent';
-  const checkedBorderClass = 'border-origin-accent dark:border-apex-accent';
-  const checkedBgClass = 'bg-origin-accent dark:bg-apex-accent';
-  const checkedIconColor = 'text-white'; // Assuming white checkmark for both themes
-  const errorTextClass = 'text-danger';
-  const mutedTextClass = 'text-origin-muted dark:text-apex-muted';
+  const baseBorderClass = 'border-border';
+  const hoverBorderClass = 'hover:border-accent';
+  const checkedBorderClass = 'border-accent';
+  const checkedBgClass = 'bg-accent';
+  const checkedIconColor = 'text-accent-foreground';
+  const errorTextClass = 'text-destructive';
+  const mutedTextClass = 'text-muted-foreground';
 
   let customCheckboxStateClasses = '';
-  if (checked) {
+  if (checked || indeterminate) {
     customCheckboxStateClasses = clsx(checkedBorderClass, checkedBgClass, checkedIconColor);
   } else {
-    customCheckboxStateClasses = clsx('bg-transparent', baseBorderClass, hoverBorderClass);
+    customCheckboxStateClasses = clsx('bg-background', baseBorderClass, hoverBorderClass);
   }
   
   // Base container classes
@@ -91,7 +91,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(({
   const labelClasses = clsx(
     'ml-2',
     disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
-    hasError ? errorTextClass : 'text-origin-text dark:text-apex-text'
+    hasError ? errorTextClass : 'text-foreground'
   );
   
   // Helper text classes

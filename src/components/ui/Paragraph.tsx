@@ -3,10 +3,12 @@
  * 
  * This component implements paragraph text elements with consistent
  * styling, spacing, and size variants. It automatically adapts to the current theme.
+ * It leverages the Text component for core styling.
  */
 
 import React from 'react';
 import clsx from 'clsx';
+import { Text, TextSize, TextWeight, TextColor } from './Text'; // Import Text component and types
 
 export type ParagraphSize = 'small' | 'medium' | 'large';
 
@@ -27,6 +29,13 @@ export interface ParagraphProps extends React.HTMLAttributes<HTMLParagraphElemen
   centered?: boolean;
 }
 
+// Mapping from ParagraphSize to TextSize
+const paragraphToTextSize: Record<ParagraphSize, TextSize> = {
+  small: 'sm',
+  medium: 'base',
+  large: 'lg',
+};
+
 export const Paragraph: React.FC<ParagraphProps> = ({
   size = 'medium',
   children,
@@ -37,36 +46,39 @@ export const Paragraph: React.FC<ParagraphProps> = ({
   centered = false,
   ...props
 }) => {
-  // Base classes applied to all paragraphs
+  // Base classes applied to all paragraphs - keep font-sans and margin
   const baseClasses = clsx(
     'font-sans',
-    !noMargin && 'mb-paragraph',
-    centered && 'text-center',
-    // Determine text color based on muted prop and theme using dark: prefix
-    muted ? 'text-origin-muted dark:text-apex-muted' : 'text-origin-text dark:text-apex-text'
+    !noMargin && 'mb-paragraph'
+    // Removed text-center (handled by Text align prop)
+    // Removed theme color classes (handled by Text color prop)
   );
+
+  // Determine Text component props based on Paragraph props
+  const textSize: TextSize = lead ? 'xl' : paragraphToTextSize[size];
+  const textWeight: TextWeight = lead ? 'medium' : 'normal';
+  const textAlign = centered ? 'center' : undefined;
   
-  // Size-specific classes
-  const sizeClasses = {
-    small: 'text-sm leading-normal',
-    medium: 'text-base leading-normal',
-    large: 'text-lg leading-normal',
-  };
-  
-  // If lead style is applied, override with lead-specific styling
-  const leadClasses = lead ? 'text-xl md:text-2xl leading-tight font-medium' : '';
-  
-  // Combine all classes
+  // Combine classes - add external className here
   const classes = clsx(
     baseClasses,
-    lead ? leadClasses : sizeClasses[size],
     className
+    // Removed size/lead classes (handled by Text size/weight props)
   );
   
   return (
-    <p className={classes} {...props}>
+    // Use Text component, passing relevant props
+    <Text
+      as="p"
+      size={textSize}
+      weight={textWeight}
+      color={ (muted ? 'muted' : 'default') satisfies TextColor }
+      align={textAlign}
+      className={classes} // Apply font-sans, margin, and external class
+      {...props}
+    >
       {children}
-    </p>
+    </Text>
   );
 };
 

@@ -42,18 +42,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({
   const validationState = hasError ? 'error' : isValid ? 'success' : 'default';
   
   // Define base and theme-specific classes using dark: variant
-  const baseTextClass = 'text-origin-text dark:text-apex-text';
-  const baseBorderClass = 'border-origin-muted dark:border-apex-muted';
-  const focusBorderClass = 'focus:border-origin-accent dark:focus:border-apex-accent';
-  const focusRingClass = 'focus:ring-origin-accent/20 dark:focus:ring-apex-accent/20';
-  const hoverBorderClass = 'hover:border-origin-accent dark:hover:border-apex-accent';
-  const errorTextClass = 'text-danger'; // Assuming danger color is theme-independent
-  const errorBorderClass = 'border-danger';
-  const errorFocusRingClass = 'focus:ring-danger/20';
+  const baseTextClass = 'text-foreground';
+  const baseBorderClass = 'border-border';
+  const focusBorderClass = 'focus:border-accent';
+  const focusRingClass = 'focus:ring-accent/20';
+  const hoverBorderClass = 'hover:border-accent';
+  const errorTextClass = 'text-destructive';
+  const errorBorderClass = 'border-destructive';
+  const errorFocusRingClass = 'focus:ring-destructive/20';
   const successBorderClass = 'border-success';
   const successFocusRingClass = 'focus:ring-success/20';
-  const placeholderClass = 'placeholder:text-origin-muted dark:placeholder:text-apex-muted';
-  const bgClass = 'bg-origin-bg-card dark:bg-apex-bg-card'; // Example, adjust if needed
+  const placeholderClass = 'placeholder:text-muted-foreground';
+  const bgClass = 'bg-card';
   
   // Container classes
   const containerClasses = clsx(
@@ -66,19 +66,19 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({
   // Label classes
   const labelClasses = clsx(
     'block mb-2 font-medium',
-    hasError ? 'text-danger' : 'text-apex-text theme-origin:text-origin-text'
+    hasError ? 'text-destructive' : 'text-foreground'
   );
   
   // Textarea field classes
   const textareaClasses = clsx(
-    'block rounded px-4 py-3 w-full bg-transparent border focus:outline-none transition-all',
+    'block rounded px-4 py-3 w-full border focus:outline-none transition-all',
     bgClass,
     placeholderClass,
+    baseTextClass,
     disabled ? 'opacity-50 cursor-not-allowed' : hoverBorderClass,
-    hasError ? errorTextClass : baseTextClass,
     {
       // Apply error styling if hasError is true
-      [clsx(errorBorderClass, errorFocusRingClass)]: hasError,
+      [clsx(errorBorderClass, errorFocusRingClass, 'text-destructive')]: hasError,
       // Apply success styling if success is true and no error
       [clsx(successBorderClass, successFocusRingClass)]: isValid && !hasError,
       // Apply default border and focus styling if no error or success state
@@ -92,9 +92,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({
   const helperTextClasses = clsx(
     'text-sm mt-1',
     {
-      'text-apex-muted theme-origin:text-origin-muted': !validationState,
-      'text-success': validationState === 'success',
-      'text-danger': validationState === 'error',
+      'text-muted-foreground': !hasError && !isValid,
+      'text-success': isValid && !hasError,
+      'text-destructive': hasError,
     }
   );
   
@@ -103,7 +103,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({
       {/* Label */}
       <label htmlFor={id} className={labelClasses}>
         {label}
-        {required && <span className="text-danger ml-1" aria-hidden="true">*</span>}
+        {required && <span className="text-destructive ml-1" aria-hidden="true">*</span>}
       </label>
       
       {/* Textarea field */}

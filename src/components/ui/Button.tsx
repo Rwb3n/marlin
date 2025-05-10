@@ -8,8 +8,6 @@
 
 import React, { useState, MouseEvent, useRef } from 'react';
 import clsx from 'clsx';
-import { useTheme } from '../../context/ThemeContext';
-import { colors } from '../../theme/colors';
 
 export type ButtonVariant = 'primary' | 'outline' | 'glass-dark' | 'glass-light';
 export type ButtonSize = 'default' | 'small';
@@ -51,8 +49,6 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   ...props
 }) => {
-  const { theme: themeName } = useTheme();
-  const currentColors = themeName === 'light' ? colors.light : colors.dark;
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -80,97 +76,35 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   // Base styles applied to all button variants
-  const baseClasses = 'relative overflow-hidden inline-flex items-center justify-center rounded-full border font-medium transition-all duration-150 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-50';
+  const baseClasses = 'relative overflow-hidden inline-flex items-center justify-center rounded-full border font-medium transition-all duration-150 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
   
-  // Function to slightly adjust hex color brightness
-  // Note: This is a simple approximation
-  const adjustColor = (color: string, amount: number): string => {
-    let usePound = false;
-    if (color[0] === '#') {
-      color = color.slice(1);
-      usePound = true;
-    }
-    const num = parseInt(color, 16);
-    let r = (num >> 16) + amount;
-    if (r > 255) r = 255;
-    else if (r < 0) r = 0;
-    let b = ((num >> 8) & 0x00FF) + amount;
-    if (b > 255) b = 255;
-    else if (b < 0) b = 0;
-    let g = (num & 0x0000FF) + amount;
-    if (g > 255) g = 255;
-    else if (g < 0) g = 0;
-    return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
-  };
-
-  // Define gradient based on theme for glass variants
-  let gradientStyle = {};
-  if (variant === 'glass-dark' || variant === 'glass-light') {
-    // Use ACCENT color as the base for the gradient
-    const baseColor = currentColors.accent || (themeName === 'light' ? '#ff4400' : '#0084ff'); // Use accent color
-    let topColor = baseColor;
-    let bottomColor = baseColor;
-    // Adjust brightness slightly for bevel effect
-    if (themeName === 'dark') {
-      topColor = adjustColor(baseColor, 20); // Lighter top for dark accent
-      bottomColor = adjustColor(baseColor, -10); // Darker bottom for dark accent
-    } else {
-      topColor = adjustColor(baseColor, 25); // Lighter top for light accent
-      bottomColor = adjustColor(baseColor, -15); // Darker bottom for light accent
-    }
-    gradientStyle = { background: `linear-gradient(to bottom, ${topColor}, ${bottomColor})` };
-  }
-
-  // Determine text color based on variant and theme
-  let finalTextColorClass = ''
-  if (variant === 'primary') {
-     // Primary button usually has inverted text for contrast
-     finalTextColorClass = themeName === 'light' ? `text-[${colors.dark.text}]` : `text-[${colors.light.text}]`; 
-  } else if (variant === 'outline') {
-     // Outline button uses accent color for text
-     finalTextColorClass = themeName === 'light' ? `text-[${colors.light.accent}]` : `text-[${colors.dark.accent}]`;
-  } else if (variant === 'glass-light') {
-     // Glass light (orange bg) -> use inverted text (light)
-     finalTextColorClass = `text-[${colors.light['text-inverted']}]`;
-  } else { // glass-dark (blue bg) -> use default text (light)
-     finalTextColorClass = `text-[${colors.dark.text}]`;
-  }
-
-  // Styles specific to each button variant
+  // Styles specific to each button variant using semantic classes and dark: variants
   const variantClasses = {
     primary: clsx(
-      'border-transparent', 
-      finalTextColorClass, 
-      `bg-[${currentColors.accent}]`, 
-      'hover:opacity-90 active:opacity-100 active:scale-[0.98]', 
-      'focus-visible:ring-offset-2',
-      `focus-visible:ring-[${currentColors.accent}]`, 
+      'bg-primary text-primary-foreground border-transparent', 
+      'hover:bg-primary/90 active:bg-primary/80 active:scale-[0.98]', 
+      'focus-visible:ring-offset-2 focus-visible:ring-ring',
       'disabled:opacity-50 disabled:cursor-not-allowed' 
     ),
     outline: clsx(
-      'bg-transparent',
-      `border-[${currentColors.accent}]`, 
-      finalTextColorClass,
-      themeName === 'light' 
-        ? 'hover:bg-black/5 active:bg-black/10' 
-        : 'hover:bg-white/10 active:bg-white/20',
+      'bg-transparent border-border text-primary',
+      'hover:bg-accent hover:text-accent-foreground active:bg-accent/90',
       'active:scale-[0.98]',
-      'focus-visible:ring-offset-2',
-      `focus-visible:ring-[${currentColors.accent}]`,
+      'focus-visible:ring-offset-2 focus-visible:ring-ring',
       'disabled:opacity-50 disabled:cursor-not-allowed'
     ),
     'glass-dark': clsx(
-      'border-transparent',
-      finalTextColorClass, // Now uses colors.dark.text
-      'hover:brightness-110 active:scale-[0.98]',
-      'focus-visible:ring-blue-400 focus-visible:ring-offset-2', // Consider using accent ring color? 
+      'bg-transparent border-border text-accent',
+      'hover:bg-accent hover:text-accent-foreground active:bg-accent/90',
+      'active:scale-[0.98]', 
+      'focus-visible:ring-offset-2 focus-visible:ring-ring', 
       'disabled:opacity-60 disabled:cursor-not-allowed'
     ),
     'glass-light': clsx(
-      'border-transparent',
-      finalTextColorClass, // Now uses colors.light['text-inverted']
-      'hover:brightness-110 active:scale-[0.98]', // Adjusted hover slightly
-      'focus-visible:ring-orange-400 focus-visible:ring-offset-2', // Use orange focus ring to match accent
+      'bg-transparent border-border text-accent',
+      'hover:bg-accent hover:text-accent-foreground active:bg-accent/90', 
+      'active:scale-[0.98]',
+      'focus-visible:ring-offset-2 focus-visible:ring-ring', 
       'disabled:opacity-60 disabled:cursor-not-allowed'
     ),
   };
@@ -193,36 +127,18 @@ export const Button: React.FC<ButtonProps> = ({
     className
   );
   
-  // Ripple color: Light theme uses inverted text, Dark theme uses default text
-  const rippleBaseColor = themeName === 'light' 
-    ? colors.light['text-inverted'] || '#ffffff' 
-    : colors.dark.text || '#ffffff'; // Use inverted text for light theme ripple
-  
-  const rippleOpacity = 0.7; 
+  // Simplified Ripple color logic (adjust if needed)
+  // Consider if ripple effect is still desired and how it fits the new theme
+  const rippleOpacity = 0.2;
   const hexToRgba = (hex: string, alpha: number) => {
-      hex = hex.replace('#', '');
-      // Add check for short hex codes (e.g., #fff)
-      if (hex.length === 3) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-      }
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      // Handle NaN results from parseInt if hex is invalid
-      if (isNaN(r) || isNaN(g) || isNaN(b)) {
-        console.error(`Invalid hex color for ripple: ${hex}`);
-        return themeName === 'light' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.2)'; // Fallback
-      }
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      // ... hex to rgba logic (ensure it handles CSS variables if needed, unlikely here) ...
+      // For now, let's use a simple white/black ripple based on semantic foreground
+      // This is a placeholder and might need refinement based on design.
+      const isDark = document.documentElement.classList.contains('dark');
+      return isDark ? `rgba(255, 255, 255, ${alpha})` : `rgba(0, 0, 0, ${alpha})`;
   };
-  const finalRippleColor = hexToRgba(rippleBaseColor, rippleOpacity);
-
-  // Combine gradient style with passed style
-  let buttonStyle = { ...style }; 
-  if (variant === 'glass-dark' || variant === 'glass-light') {
-     // Merge gradient and filter for glass variants
-     buttonStyle = { ...buttonStyle, ...gradientStyle, filter: 'url(#water-surface)' }; 
-  }
+  // The ripple color probably needs semantic definition, using white/black as placeholder
+  const finalRippleColor = hexToRgba('#000000', rippleOpacity); 
 
   return (
     <button 
@@ -231,37 +147,21 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || isLoading}
       aria-busy={isLoading}
       onClick={handleRippleClick}
-      style={buttonStyle}
+      style={style}
       {...props}
     >
-      {(variant === 'glass-dark' || variant === 'glass-light') && ripples.map(ripple => (
-        <span
-          key={ripple.id}
-          className="button-ripple z-0"
-          style={{
-            left: ripple.x,
-            top: ripple.y,
-            width: ripple.size,
-            height: ripple.size,
-            backgroundColor: finalRippleColor,
-          }}
-        />
-      ))}
-      
-      <span className="relative z-10 flex items-center justify-center"> 
-        {isLoading && (
-          <span className="mr-2 inline-block animate-spin" aria-hidden="true">⟳</span>
-        )}
-        
-        {icon && iconPosition === 'left' && (
-          <span className={children ? "mr-2" : ""} aria-hidden="true">{icon}</span>
-        )}
-        
-        <span>{children}</span>
-        
-        {icon && iconPosition === 'right' && (
-          <span className={children ? "ml-2" : ""} aria-hidden="true">{icon}</span>
-        )}
+      {isLoading && (
+        <span className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </span>
+      )}
+      <span className={clsx("inline-flex items-center", isLoading && 'invisible')}> 
+        {icon && iconPosition === 'left' && <span className="mr-2 -ml-1">{icon}</span>}
+        {children}
+        {icon && iconPosition === 'right' && <span className="ml-2 -mr-1">{icon}</span>}
       </span>
     </button>
   );

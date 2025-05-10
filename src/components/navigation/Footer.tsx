@@ -1,10 +1,10 @@
 import React from 'react';
-import { useTheme } from '../../context/ThemeContext';
 import Link from '../ui/Link';
 import Container from '../layout/Container';
 import { socialLinks as importedSocialLinks } from '../../data/navigationData'; // Import actual social links
 // Import the new icon components
 import { TwitterIcon, FacebookIcon, LinkedInIcon, InstagramIcon, YouTubeIcon } from '../icons/SocialIcons';
+import clsx from 'clsx';
 
 // Map icon names from data to imported components
 const iconMap: { [key: string]: React.FC<any> } = {
@@ -50,28 +50,20 @@ export default function Footer({
   showSocialLinks = true,
   showCopyright = true,
 }: FooterProps) {
-  const { theme } = useTheme();
   const currentYear = React.useMemo(() => new Date().getFullYear(), []);
   
-  const textColorClass = theme === 'light' ? 'text-light-text' : 'text-dark-text';
-  const textMutedClass = theme === 'light' ? 'text-light-muted' : 'text-dark-muted';
-  const textAccentClass = theme === 'light' ? 'text-light-accent' : 'text-dark-accent';
-  const borderColorClass = theme === 'light' ? 'border-light-border' : 'border-dark-border';
-  const dividerClass = theme === 'light' ? 'bg-black/10' : 'bg-white/10';
-  const hoverBgClass = theme === 'light' ? 'hover:bg-black/5' : 'hover:bg-white/5';
-
   // Use imported social media links
   const socialLinks = importedSocialLinks;
 
   // If minimal variant, render simple footer
   if (variant === 'minimal') {
     return (
-      <footer className={`
-        w-full z-10 py-4 
-        relative min-h-[56px] 
-        ${textColorClass}
-        ${className || ''}
-      `}>
+      <footer className={clsx(
+        'w-full z-10 py-4',
+        'relative min-h-[56px]',
+        'text-foreground',
+        className
+      )}>
         <Container>
           <div className="flex justify-center items-center opacity-95 text-sm">
             {showCopyright && (
@@ -85,18 +77,18 @@ export default function Footer({
 
   // Default variant with full content
   return (
-    <footer className={`
-      w-full z-10 py-8 
-      relative md:pb-4 pb-16 
-      ${textColorClass}
-      ${className || ''}
-    `}>
+    <footer className={clsx(
+      'w-full z-10 py-8',
+      'relative md:pb-4 pb-16',
+      'text-foreground',
+      className
+    )}>
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Company Info */}
           <div>
             <h3 className="text-lg font-bold mb-4">
-              <span className={textAccentClass}>
+              <span className="text-accent">
                 BLUE MARLIN
               </span> OS
             </h3>
@@ -154,26 +146,22 @@ export default function Footer({
               <h3 className="text-lg font-bold mb-4">Connect With Us</h3>
               <div className="flex gap-4">
                 {socialLinks.map((social) => {
-                  // Get the correct icon component based on the icon string from data
-                  const IconComponent = iconMap[social.icon || 'default']; // Fallback if needed
-                  
+                  const IconComponent = iconMap[social.icon || 'default'];
                   return (
                     <Link 
                       key={social.id} 
                       href={social.url || '#'} 
-                      className={`
-                        p-2 rounded-full 
-                        ${hoverBgClass}
-                        transition-colors duration-200
-                      `}
+                      className={clsx(
+                        'p-2 rounded-full',
+                        'hover:bg-muted/50 dark:hover:bg-muted/50',
+                        'transition-colors duration-200'
+                      )}
                       aria-label={social.label} 
                       showExternalIcon={false}
                     >
-                      {/* Render the mapped icon component */}
                       {IconComponent ? (
                         <IconComponent className="w-6 h-6" /> 
                       ) : (
-                        // Fallback if icon component not found (shouldn't happen with map)
                         <span className="w-6 h-6 flex items-center justify-center">?</span> 
                       )}
                     </Link>
@@ -185,10 +173,10 @@ export default function Footer({
         </div>
         
         {/* Divider */}
-        <div className={`
-          my-6 h-px 
-          ${dividerClass}
-        `} />
+        <div className={clsx(
+          'my-6 h-px',
+          'bg-border'
+        )} />
         
         {/* Copyright */}
         {showCopyright && (
